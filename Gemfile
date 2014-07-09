@@ -15,6 +15,12 @@ gem "mandrill-api"
 
 gem "jaconda", :git => 'https://github.com/dkazantsev/jaconda-api.git', :branch => 'dk-post-length-fix'
 
+
+gem "sinatra", "= 1.4.5"
+
+gem "thin", "= 1.6.2"
+
+
 group :development do
   gem "rake", "= 10.3.2"
   gem "pry"

@@ -25,15 +25,19 @@ ActiveRecord::Base.establish_connection(db)
 
 credentials = YAML.load_file(File.expand_path('../credentials.yml', __FILE__))
 
-Sync.config(credentials["kanbanery"])
-Sync.initialize_queue
+# Sync.config(credentials["kanbanery"])
+# Sync.initialize_queue
 
-Chat.config(credentials["jaconda"])
-Chat.initialize_queue
+# Chat.config(credentials["jaconda"])
+# Chat.initialize_queue
 
-Mail.config(credentials["mandrill"])
-Mail.initialize_queue
+# Mail.config(credentials["mandrill"])
+# Mail.initialize_queue
 
-unless environment == 'test'
-  Delayed::Worker.new.start
-end
+# unless environment == 'test'
+#   Delayed::Worker.new.start
+# end
+
+require 'sinatra/base'
+
+Frontend.run!
