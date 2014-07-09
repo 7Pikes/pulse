@@ -1,0 +1,91 @@
+GIT
+  remote: https://github.com/dkazantsev/jaconda-api.git
+  revision: 223cd4e00e505f3b852440bec824e9e0ca8fca08
+  branch: dk-post-length-fix
+  specs:
+    jaconda (2.0.2)
+      activeresource (>= 2.3.5)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activemodel (4.1.2)
+      activesupport (= 4.1.2)
+      builder (~> 3.1)
+    activerecord (4.1.2)
+      activemodel (= 4.1.2)
+      activesupport (= 4.1.2)
+      arel (~> 5.0.0)
+    activeresource (4.0.0)
+      activemodel (~> 4.0)
+      activesupport (~> 4.0)
+      rails-observers (~> 0.1.1)
+    activesupport (4.1.2)
+      i18n (~> 0.6, >= 0.6.9)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.1)
+      tzinfo (~> 1.1)
+    arel (5.0.1.20140414130214)
+    builder (3.2.2)
+    capistrano (3.2.1)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (~> 1.3)
+    capistrano-rvm (0.1.1)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
+    coderay (1.1.0)
+    colorize (0.7.3)
+    curb (0.8.5)
+    daemons (1.1.9)
+    delayed_job (4.0.2)
+      activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.1)
+      activerecord (>= 3.0, < 4.2)
+      delayed_job (>= 3.0, < 4.1)
+    excon (0.37.0)
+    i18n (0.6.9)
+    json (1.8.1)
+    mandrill-api (1.0.52)
+      excon (>= 0.16.0, < 1.0)
+      json (>= 1.7.7, < 2.0)
+    method_source (0.8.2)
+    minitest (5.4.0)
+    mysql2 (0.3.16)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.9.1)
+    pry (0.10.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    rails-observers (0.1.2)
+      activemodel (~> 4.0)
+    rake (10.3.2)
+    slop (3.5.0)
+    sshkit (1.5.1)
+      colorize
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
+    thread_safe (0.3.4)
+    tzinfo (1.2.1)
+      thread_safe (~> 0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activemodel (= 4.1.2)
+  activerecord (= 4.1.2)
+  activeresource (= 4.0.0)
+  capistrano (= 3.2.1)
+  capistrano-rvm (= 0.1.1)
+  curb (= 0.8.5)
+  daemons (= 1.1.9)
+  delayed_job_active_record (= 4.0.1)
+  jaconda!
+  mandrill-api
+  mysql2 (= 0.3.16)
+  pry
+  rake (= 10.3.2)

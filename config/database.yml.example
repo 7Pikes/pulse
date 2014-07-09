@@ -1,0 +1,10 @@
+production: &production
+  adapter:   'mysql2'
+  username:  'USER'
+  password:  'PASSWD'
+  database:  'pulse'
+  pool:       5
+development:
+  <<: *production
+test:
+  <<: *production

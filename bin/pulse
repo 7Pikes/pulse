@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+unless ARGV[0] =~ /(start|stop|restart|status)/
+  puts "Usage: bin/pulse {start|stop|restart|status}"
+  exit 1
+end
+
+
+require 'rubygems'
+require 'daemons'
+
+root_path = File.dirname(File.expand_path('../', __FILE__))
+
+app_path = File.join(root_path, 'app.rb')
+dir_path = File.join(root_path, 'tmp/daemon')
+
+Daemons.run_proc('pulse', 
+  dir_mode: :normal, 
+  dir: dir_path, 
+  log_output: true, 
+  backtrace: true
+) do
+  Dir.chdir(root_path)
+  exec "bundle exec ruby #{app_path} -sv"
+end
