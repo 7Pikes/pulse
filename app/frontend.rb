@@ -17,6 +17,7 @@ class Frontend < Sinatra::Base
     redirect to '/default'
   end
 
+
   get '/default' do
     @users = User.all
 
@@ -25,8 +26,11 @@ class Frontend < Sinatra::Base
       @tasks = Task.where(user_id: params[:id])
     end
 
+    @health = Delayed::Job.where("last_error is not null").count == 0
+
     erb :default, :layout => :layout
   end
+
 
   get '/blocked' do
     @users = User.where(id: Task.select(:user_id).where(blocked: true).reorder(nil))
@@ -36,7 +40,16 @@ class Frontend < Sinatra::Base
       @tasks = Task.where(user_id: params[:id])
     end
 
+    @health = Delayed::Job.where("last_error is not null").count == 0
+
     erb :blocked, :layout => :layout
+  end
+
+
+  get '/status' do
+    @jobs = Delayed::Job.select(:attempts, :run_at, :locked_at, :queue, :failed_at, :last_error)
+
+    erb :status, :layout => :layout
   end
 
 end

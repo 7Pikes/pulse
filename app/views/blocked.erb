@@ -3,8 +3,13 @@
 
     <div id="buttons" style="float: right">
 
-      <a href="#" class="button" title="Демон отработал без ошибок?">
-        Статус: <span style="color: green">Норм.</span></a>
+      <a href="/status" class="button" title="Демон отработал без ошибок?">Статус: 
+        <% if @health %>
+          <span style="color: green">Норм.</span>
+        <% else %>
+          <span style="color: red">Ошиб.</span>
+        <% end %>
+      </a>
 
       <a href="/default" class="button" style="margin-right: 6px">Показать все задачи</a>
 
@@ -15,6 +20,7 @@
   <h5>
     Веб-мордочка для отображения текущих задач
   </h5>
+  
   <hr />
 </div>
 
