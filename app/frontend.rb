@@ -29,6 +29,13 @@ class Frontend < Sinatra::Base
   end
 
   get '/blocked' do
+    @users = User.where(id: Task.select(:user_id).where(blocked: true).reorder(nil))
+
+    if params[:id]
+      @user = User.find_by_id(params[:id])
+      @tasks = Task.where(user_id: params[:id])
+    end
+
     erb :blocked, :layout => :layout
   end
 
