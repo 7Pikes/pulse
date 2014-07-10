@@ -2,7 +2,7 @@ class Frontend < Sinatra::Base
 
   use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
-  require 'pry'
+  # require 'pry'
 
   set :root, File.expand_path('../../', __FILE__)
   set :public_folder, Proc.new { File.join(root, "public") }

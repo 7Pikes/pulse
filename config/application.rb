@@ -14,7 +14,6 @@ require 'curb'
 require 'json'
 
 require 'jaconda'
-# require 'net/smtp'
 require 'mandrill'
 require 'securerandom'
 
