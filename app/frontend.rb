@@ -1,5 +1,7 @@
 class Frontend < Sinatra::Base
 
+  use ActiveRecord::ConnectionAdapters::ConnectionManagement
+
   require 'pry'
 
   set :root, File.expand_path('../../', __FILE__)
@@ -7,6 +9,7 @@ class Frontend < Sinatra::Base
   set :views, Proc.new { File.join(root, "app", "views") }
 
   # set :server, 'thin'
+  set :server, 'webrick'
   set :port, 4567
 
 

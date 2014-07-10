@@ -34,10 +34,9 @@ credentials = YAML.load_file(File.expand_path('../credentials.yml', __FILE__))
 # Mail.config(credentials["mandrill"])
 # Mail.initialize_queue
 
-# unless environment == 'test'
-#   Delayed::Worker.new.start
-# end
-
 require 'sinatra/base'
 
-Frontend.run!
+unless environment == 'test'
+#   Delayed::Worker.new.start
+  Frontend.run!
+end

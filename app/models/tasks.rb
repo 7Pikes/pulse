@@ -26,12 +26,12 @@ class Task < ActiveRecord::Base
     buf.join
   end
 
-  private
 
   def localized_date
     months = %w(января февраля марта апреля мая июня июля августа сентября октября ноября декабря)
     "#{moved_at.day} #{months[moved_at.month - 1]}"
   end
+
 
   def localized_phase    
     result = nil

@@ -1,8 +1,20 @@
 <div class="sixteen columns">
   <h1 class="remove-bottom" style="margin-top: 40px"> Pulse
-    <a href="/blocked" class="button" style="float: right;">Заблокированные задачи</a></h1>
 
-  <h5>Веб-мордочка для отображения текущих задач</h5>
+    <div id="buttons" style="float: right">
+
+      <a href="#" class="button" title="Демон отработал без ошибок?">
+        Статус: <span style="color: green">Норм.</span></a>
+
+      <a href="/blocked" class="button" style="margin-right: 6px">Заблокированные задачи</a>
+
+    </div>
+
+  </h1>
+
+  <h5>
+    Веб-мордочка для отображения текущих задач
+  </h5>
   <hr />
 </div>
 
@@ -32,9 +44,21 @@
       <ul class="square">
 
         <% @tasks.each do |task| %>
-          <li><%= task.title %></li>
+          <li>
+            
+            <strong><%= task.title %></strong> [<%= task.localized_phase %>]
+            <br/>
+
+            <%= task.description.gsub("\n", "<br/>") %>
+            <br/>
+            <br/>
+
+            <a href="<%= task.global_in_context_url %>" target="_blank">Открыть карточку</a>
+            <br/>
+            <br/>
+
+          </li>
         <% end %>
-        <!-- <li><strong>Fast to Start</strong>: It's a tool for rapid development with best practices</li> -->
 
       </ul>
     <% else %>
