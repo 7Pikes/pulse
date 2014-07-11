@@ -39,43 +39,62 @@ set :scm, :git
 # set :keep_releases, 5
 
 
-namespace :deploy do
-
-  namespace :daemon do
-
-    desc 'Start daemon'
-    task :start do
-      on roles(:app) do
-        execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse start"
-      end
+namespace :pulse do
+  desc 'Start daemon'
+  task :start do
+    on roles(:app) do
+      execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse start"
     end
-
-
-    desc 'Stop daemon'
-    task :stop do
-      on roles(:app) do
-        execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse stop"
-      end
-    end
-
-    desc 'Status of daemon'
-    task :status do
-      on roles(:app) do
-        capture "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse status"
-      end
-    end
-
   end
 
+  desc 'Stop daemon'
+  task :stop do
+    on roles(:app) do
+      execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse stop"
+    end
+  end
 
-  desc 'Upload local files: config/database.yml and config/credentials.yml'
+  desc 'Status of daemon'
+  task :status do
+    on roles(:app) do
+      capture "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/pulse status"
+    end
+  end
+end
+
+
+namespace :frontend do
+  desc 'Start web server'
+  task :start do
+    on roles(:app) do
+      execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/frontend start"
+    end
+  end
+
+  desc 'Stop web server'
+  task :stop do
+    on roles(:app) do
+      execute "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/frontend stop"
+    end
+  end
+
+  desc 'Status of web server'
+  task :status do
+    on roles(:app) do
+      capture "source ~/.rvm/scripts/rvm && cd #{deploy_to}/current && RACK_ENV=production bin/frontend status"
+    end
+  end
+end
+
+
+namespace :deploy do
+  desc 'Upload local config files: config/database.yml and config/credentials.yml'
   task :upload_configs do
     on roles(:app) do
       upload! "config/database.yml", "#{deploy_to}/current/config/database.yml"
       upload! "config/credentials.yml", "#{deploy_to}/current/config/credentials.yml"      
     end
   end
-
 
   desc 'Run bundle install'
   task :bundle_install do
@@ -84,4 +103,10 @@ namespace :deploy do
     end
   end
 
+  desc 'Clear temporary files'
+  task :clear_temp do
+    on roles(:app) do
+      capture "cd #{deploy_to}/current && rm tmp/daemons/*"
+    end
+  end
 end

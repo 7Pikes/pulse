@@ -11,7 +11,7 @@ require 'daemons'
 root_path = File.dirname(File.expand_path('../', __FILE__))
 
 app_path = File.join(root_path, 'app.rb')
-dir_path = File.join(root_path, 'tmp/daemon')
+dir_path = File.join(root_path, 'tmp/daemons')
 
 Daemons.run_proc('pulse', 
   dir_mode: :normal, 
