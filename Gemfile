@@ -18,7 +18,7 @@ gem "jaconda", :git => 'https://github.com/dkazantsev/jaconda-api.git', :branch 
 
 gem "sinatra", "= 1.4.5"
 
-# gem "thin", "= 1.6.2"
+gem "thin", "= 1.6.2"
 
 
 group :development do

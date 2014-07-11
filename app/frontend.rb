@@ -2,15 +2,9 @@ class Frontend < Sinatra::Base
 
   use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
-  # require 'pry'
-
   set :root, File.expand_path('../../', __FILE__)
   set :public_folder, Proc.new { File.join(root, "public") }
   set :views, Proc.new { File.join(root, "app", "views") }
-
-  # set :server, 'thin'
-  set :server, 'webrick'
-  set :port, 4567
 
 
   get '/' do

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 unless ARGV[0] =~ /(start|stop|status)/
-  puts "Usage: bin/pulse {start|stop|restart|status}"
+  puts "Usage: bin/frontend {start|stop|restart|status}"
   exit 1
 end
 
@@ -10,10 +10,10 @@ require 'daemons'
 
 root_path = File.dirname(File.expand_path('../', __FILE__))
 
-app_path = File.join(root_path, 'app.rb')
+app_path = File.join(root_path, 'web.rb')
 dir_path = File.join(root_path, 'tmp/daemon')
 
-Daemons.run_proc('pulse', 
+Daemons.run_proc('frontend', 
   dir_mode: :normal, 
   dir: dir_path, 
   log_output: true, 
