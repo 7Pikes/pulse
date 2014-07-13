@@ -25,58 +25,36 @@
 </div>
 
 
-<div class="one-third column">
-  <h3>Пользователи</h3>
-  <br/>
+<div class="sixteen column">
 
-  <ul>
-    <% @users.each do |user| %>
-
-      <li>
-        <a href="/blocked?id=<%= user.id %>">
-          <%= user.name %></a>
-      </li>
-
-    <% end %>
-  </ul>
-</div>
-
-<div class="two-thirds column">
-  <% if @user %>
-    <h3>Задачи для <%= @user.name %></h3>
-
-    <p style="color: blue;">Показываются только заблокированные задачи</p>
-
-
-    <% if @tasks.any? %>
-      <ul class="square">
-
-        <% @tasks.each do |task| %>
-          <li>
-            
-            <strong><%= task.title %></strong> [<%= task.localized_phase %>]
-            <br/>
-
-            <%= task.description.gsub("\n", "<br/>") %>
-            <br/>
-            <br/>
-
-            <a href="<%= task.global_in_context_url %>" target="_blank">Открыть карточку</a>
-            <br/>
-            <br/>
-
-          </li>
-        <% end %>
-
-      </ul>
-    <% else %>
-      <p>Нет открытых задач.</p>
-    <% end %>
-
-  <% else %>
-    <h3>Задачи</h3>
+  <% @users.each do |user| %>
+    <h4>Заблокированные задачи <%= user.name %></h4>
     <br/>
 
-    <p>Пользователь не выбран</p>
+    <ul class="square">
+
+      <% user.tasks.each do |task| %>
+        <% next unless task.blocked %>
+
+        <li>
+          <strong><%= task.title %></strong> [<%= task.localized_phase %>]
+
+          <br/>
+          <br/>
+
+          <a href="<%= task.global_in_context_url %>" target="_blank">Открыть карточку</a>
+
+          <% unless task.deadlines_list.empty? %>
+            | <em> Дедлайн: <%= task.deadlines_list %> </em>
+          <% end %>
+
+          <br/>
+          <br/>
+        </li>
+
+      <% end %>
+
+    </ul>
   <% end %>
+
 </div>

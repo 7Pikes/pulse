@@ -27,12 +27,7 @@ class Frontend < Sinatra::Base
 
 
   get '/blocked' do
-    @users = User.where(id: Task.select(:user_id).where(blocked: true).reorder(nil))
-
-    if params[:id]
-      @user = User.find_by_id(params[:id])
-      @tasks = Task.where(user_id: params[:id])
-    end
+    @users = User.include(:tasks).where(id: Task.select(:user_id).where(blocked: true).reorder(nil))
 
     @health = Delayed::Job.where("last_error is not null").count == 0
 
