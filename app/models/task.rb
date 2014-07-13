@@ -5,6 +5,8 @@ class Task < ActiveRecord::Base
   belongs_to :user
   belongs_to :phase
 
+  has_many :deadlines
+
   validates_presence_of :id, :title
 
   default_scope do
@@ -65,6 +67,11 @@ class Task < ActiveRecord::Base
     end
 
     result
+  end
+
+
+  def deadlines_list
+    deadlines.sort.map { |d| d.deadline.strftime("%Y-%m-%d") }.join(', ')
   end
 
 end

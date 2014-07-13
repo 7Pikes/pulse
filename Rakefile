@@ -21,11 +21,9 @@ end
 
 desc "Run pry console."
 task :console do
-  require 'pry'
-
   ENV['RACK_ENV'] = 'test'
-  Rake::Task["environment"].invoke
-  
+  require File.expand_path("../app.rb", __FILE__)
+  require 'pry'  
   binding.pry
 end
 

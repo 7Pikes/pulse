@@ -134,6 +134,17 @@ class Sync
       end
     end
 
+    @tasks.each do |task|
+      next unless task["deadline"]
+
+      begin
+        Deadline.create(task_id: task["id"], deadline: task["deadline"])
+      rescue ActiveRecord::RecordNotUnique => e
+        puts e.class
+        puts e.message
+      end
+    end
+
     true
   end
 

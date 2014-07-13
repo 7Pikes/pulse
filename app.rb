@@ -6,6 +6,7 @@ require 'curb'
 require 'jaconda'
 require 'mandrill'
 require 'securerandom'
+require 'time'
 
 credentials = YAML.load_file(File.expand_path('../config/credentials.yml', __FILE__))
 
