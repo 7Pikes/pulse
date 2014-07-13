@@ -52,7 +52,13 @@
         <% @tasks.each do |task| %>
           <li>
 
-            <strong><%= task.title %></strong> [<%= task.localized_phase %>]
+            <strong 
+              <%= 'style="background-color: lightsalmon" title="Заблокирована"' if task.blocked %> >
+              <%= task.title %>
+            </strong>
+
+            [<%= task.localized_phase %>]
+            
             <br/>
             <br/>
 
