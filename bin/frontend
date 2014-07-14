@@ -1,25 +1,18 @@
 #!/usr/bin/env ruby
 
 unless ARGV[0] =~ /(start|stop|status)/
-  puts "Usage: bin/frontend {start|stop|restart|status}"
+  puts "Usage: bin/frontend {start|stop|status}"
   exit 1
 end
 
-require 'rubygems'
-require 'daemons'
-
 root_path = File.dirname(File.expand_path('../', __FILE__))
 
-app_path = File.join(root_path, 'web.rb')
-dir_path = File.join(root_path, 'tmp/daemons')
-
-Daemons.run_proc('frontend', 
-  dir_mode: :normal, 
-  dir: dir_path, 
-  log_output: true, 
-  backtrace: true
-) do
-  Dir.chdir(root_path)
-  exec "bundle exec ruby #{app_path} -sv"
+case ARGV[0]
+when 'start'
+  system "cd #{root_path} && unicorn -c config/unicorn.rb -D"
+when 'stop'
+  system "cat #{root_path}/tmp/daemons/frontend.pid | xargs kill -QUIT"
+when 'status'
+  (system "ps -p `cat #{root_path}/tmp/daemons/frontend.pid | xargs` &> /dev/null") ? "Running" : "Not running"
 end
 

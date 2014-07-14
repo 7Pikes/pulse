@@ -83,6 +83,9 @@ class Sync
       curl.headers["X-Kanbanery-ApiToken"] = @@token
     end
 
+    # TODO
+    # https://7pikes.kanbanery.com/api/v1/tasks/1434463/events.json
+
     @users = JSON.parse(@users.body)
     @phases = JSON.parse(@phases.body)
     @tasks = JSON.parse(@tasks.body)

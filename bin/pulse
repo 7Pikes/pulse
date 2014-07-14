@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 unless ARGV[0] =~ /(start|stop|status)/
-  puts "Usage: bin/pulse {start|stop|restart|status}"
+  puts "Usage: bin/pulse {start|stop|status}"
   exit 1
 end
 

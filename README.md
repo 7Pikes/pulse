@@ -9,5 +9,3 @@
 ## TODO:
 
 * Create a new kanbanery account.
-
-* Thin config and (perhaps) run nginx.

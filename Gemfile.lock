@@ -48,6 +48,7 @@ GEM
     excon (0.37.0)
     i18n (0.6.9)
     json (1.8.1)
+    kgio (2.9.2)
     mandrill-api (1.0.52)
       excon (>= 0.16.0, < 1.0)
       json (>= 1.7.7, < 2.0)
@@ -66,6 +67,7 @@ GEM
       rack
     rails-observers (0.1.2)
       activemodel (~> 4.0)
+    raindrops (0.13.0)
     rake (10.3.2)
     sinatra (1.4.5)
       rack (~> 1.4)
@@ -84,6 +86,10 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.1)
       thread_safe (~> 0.1)
+    unicorn (4.8.3)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -104,3 +110,4 @@ DEPENDENCIES
   rake (= 10.3.2)
   sinatra (= 1.4.5)
   thin (= 1.6.2)
+  unicorn
