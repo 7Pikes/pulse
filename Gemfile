@@ -13,14 +13,12 @@ gem "curb", "= 0.8.5"
 
 gem "mandrill-api"
 
-gem "jaconda", :git => 'https://github.com/dkazantsev/jaconda-api.git', :branch => 'dk-post-length-fix'
+gem "jaconda", "= 2.0.3"
 
 
 gem "sinatra", "= 1.4.5"
 
-gem "thin", "= 1.6.2"
-
-gem "unicorn"
+gem "unicorn", "= 4.8.3"
 
 group :development do
   gem "rake", "= 10.3.2"
@@ -28,5 +26,4 @@ group :development do
 end
 
 gem "capistrano", "= 3.2.1"
-# gem "capistrano-bundler", "= 1.1.2"
 gem "capistrano-rvm", "= 0.1.1"
