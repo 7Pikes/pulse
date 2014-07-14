@@ -9,7 +9,7 @@ root_path = File.dirname(File.expand_path('../', __FILE__))
 
 case ARGV[0]
 when 'start'
-  system "cd #{root_path} && unicorn -c config/unicorn.rb -D"
+  system "cd #{root_path} && unicorn -c config/unicorn.conf -D"
 when 'stop'
   system "cat #{root_path}/tmp/daemons/frontend.pid | xargs kill -QUIT"
 when 'status'
