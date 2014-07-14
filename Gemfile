@@ -10,14 +10,10 @@ gem "delayed_job_active_record", "= 4.0.1"
 gem "daemons", "= 1.1.9"
 
 gem "curb", "= 0.8.5"
-
-gem "mandrill-api"
-
+gem "mandrill-api", "= 1.0.52"
 gem "jaconda", "= 2.0.3"
 
-
 gem "sinatra", "= 1.4.5"
-
 gem "unicorn", "= 4.8.3"
 
 group :development do
