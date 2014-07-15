@@ -66,31 +66,60 @@ class Sync
 
   private
 
+  def http_request(uri)
+    Curl::Easy.perform(uri) do |curl|
+      curl.headers["X-Kanbanery-ApiToken"] = @@token
+    end
+  end
+
 
   def get_fresh_data
 
     uri = "https://#{@@host}/api/#{@@api}/projects/#{@@project}/"
 
-    @users = Curl::Easy.perform("#{uri}users.json") do |curl| 
-      curl.headers["X-Kanbanery-ApiToken"] = @@token
-    end
-
-    @phases = Curl::Easy.perform("#{uri}columns.json") do |curl| 
-      curl.headers["X-Kanbanery-ApiToken"] = @@token
-    end
-
-    @tasks = Curl::Easy.perform("#{uri}tasks.json") do |curl| 
-      curl.headers["X-Kanbanery-ApiToken"] = @@token
-    end
-
-    # TODO
-    # https://7pikes.kanbanery.com/api/v1/tasks/1434463/events.json
+    @users = http_request("#{uri}users.json")
+    @phases = http_request("#{uri}columns.json")
+    @tasks = http_request("#{uri}tasks.json")
 
     @users = JSON.parse(@users.body)
     @phases = JSON.parse(@phases.body)
     @tasks = JSON.parse(@tasks.body)
 
+    @tasks.each do |task|
+      task["movement"] = fetch_task_movement(task["id"])
+    end
+
     true
+  end
+
+
+  def fetch_task_movement(task_id)
+    uri = "https://7pikes.kanbanery.com/api/v1/tasks/#{task_id}/events.json"
+
+    events = http_request(uri)
+    events = JSON.parse(events.body)
+
+    TaskEvents.refresh
+
+    events.each do |event|
+      statement = 'insert into events (name, user_name, column_name, task_title, created_at)' \
+        + 'values(?, ?, ?, ?, ?)'
+
+      attrs = event["custom_attributes"]
+      created_at = Time.parse(event["created_at"]).to_i
+
+      values = [event["name"], attrs["user_name"], attrs["column_name"], attrs["task_title"], created_at]
+
+      TaskEvents.db.prepare(statement) do |query|
+        query.execute(values)
+      end
+    end
+
+    movement = TaskEvents.db.execute(
+      "select * from events where name = 'task_moved' order by created_at DESC limit 1"
+    ).flatten
+
+    movement.any? ? TaskEvents.with_column_names(movement) : {}
   end
 
 
@@ -119,6 +148,8 @@ class Sync
     end
 
     @tasks.each do |task|
+      task = handle_task_watcher(task)
+
       begin
         Task.create(
           id: task["id"],
@@ -127,6 +158,7 @@ class Sync
           global_in_context_url: task["global_in_context_url"],
           phase_id: task["column_id"],
           user_id: task["owner_id"],
+          watcher_id: task["watcher_id"],
           blocked: task["blocked"],
           ready_to_pull: task["ready_to_pull"],
           moved_at: task["moved_at"]
@@ -149,6 +181,20 @@ class Sync
     end
 
     true
+  end
+
+
+  def handle_task_watcher(task)
+    phase_name = task["movement"]["column_name"]
+
+    return task unless %w(Testing Reviewing).include?(phase_name)
+    return task unless Phase.find_by_id(task["column_id"]).name == phase_name
+
+    user = User.find_by_name(task["movement"]["user_name"])
+    task["watcher_id"] = user.id
+
+    task.delete("movement")
+    task
   end
 
 end

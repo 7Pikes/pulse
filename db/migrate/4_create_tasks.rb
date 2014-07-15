@@ -8,6 +8,7 @@ class CreateTasks < ActiveRecord::Migration
       t.text       :global_in_context_url
       t.integer    :phase_id
       t.integer    :user_id
+      t.integer    :watcher_id
       t.boolean    :blocked
       t.boolean    :ready_to_pull
       t.datetime   :moved_at

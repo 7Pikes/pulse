@@ -6,6 +6,8 @@ gem "activerecord", "= 4.1.2", require: "active_record"
 gem "activeresource", "= 4.0.0"
 gem "activemodel", "= 4.1.2"
 
+gem "sqlite3", "= 1.3.9"
+
 gem "delayed_job_active_record", "= 4.0.1"
 gem "daemons", "= 1.1.9"
 

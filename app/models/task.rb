@@ -3,6 +3,8 @@
 class Task < ActiveRecord::Base
 
   belongs_to :user
+  belongs_to :watcher, class_name: 'User'
+
   belongs_to :phase
 
   has_many :deadlines

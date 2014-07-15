@@ -6,6 +6,8 @@ require 'boot'
 environment = ENV['RACK_ENV']
 Bundler.require :default, environment
 
+require 'sqlite3'
+
 Dir[File.expand_path('../../app/*.rb', __FILE__)].each { |f| require f }
 Dir[File.expand_path('../../app/models/*.rb', __FILE__)].each { |f| require f }
 
