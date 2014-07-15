@@ -46,40 +46,17 @@ class Chat < PulseDispatch
 
     tasks.each do |key, val|
       buf << "Задачи #{val["name"]}:"
-      val["titles"].each { |title| buf << title }
+      (val["work"].to_a + val["watch"].to_a).each { |title| buf << title }
       buf << ' '      
     end
 
     @brief = buf.join("\n")
 
-    # split_to_pages
-
     true
   end
 
 
-  # def split_to_pages(num=1800)
-  #   pages = []
-
-  #   position = 0
-
-  #   loop do
-  #     caret = @brief.rindex("\n", num + position)
-  #     break if caret <= position
-
-  #     pages << @brief[position..caret]
-  #     position = caret + 1
-  #   end
-
-  #   @brief = pages
-  # end
-
-
-  def dispatch_brief    
-    # @brief.each do |chuck|
-    #   Jaconda::Notification.notify(text: chuck, sender_name: @@sender)
-    # end
-
+  def dispatch_brief
     Jaconda::Notification.notify(text: @brief, sender_name: @@sender)
   end
 
