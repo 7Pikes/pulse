@@ -185,6 +185,8 @@ class Sync
 
 
   def handle_task_watcher(task)
+    return task unless task["movement"]
+
     phase_name = task["movement"]["column_name"]
 
     return task unless %w(Testing Reviewing).include?(phase_name)
@@ -193,7 +195,6 @@ class Sync
     user = User.find_by_name(task["movement"]["user_name"])
     task["watcher_id"] = user.id
 
-    task.delete("movement")
     task
   end
 
