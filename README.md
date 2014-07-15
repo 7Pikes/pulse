@@ -9,3 +9,4 @@
 ## TODO:
 
 * Create a new kanbanery account.
+* Mysql user.

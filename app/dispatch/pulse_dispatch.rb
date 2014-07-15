@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 class PulseDispatch
 
   class << self
@@ -16,15 +18,34 @@ class PulseDispatch
     def get_tasks_list
       tasks = {}
 
-      Task.includes(:user, :phase).each do |task|
-        unless tasks[task.user_id]
-          tasks[task.user_id] = {}
-          tasks[task.user_id]["name"] = task.user.name
-          tasks[task.user_id]["email"] = task.user.email
-          tasks[task.user_id]["titles"] = []
+      Task.includes(:user, :phase).where("user_id is not null").each do |task|
+        uid = task.user_id
+
+        unless tasks[uid]
+          tasks[uid] = {}
+          tasks[uid]["work"]  = []
+          tasks[uid]["name"]  = task.user.name
+          tasks[uid]["email"] = task.user.email
         end
 
-        tasks[task.user_id]["titles"] << task.to_pretty_s
+        tasks[uid]["work"] << task.to_pretty_s
+      end
+
+      Task.includes(:watcher, :phase).where("watcher_id is not null").each do |task|
+        uid = task.watcher_id
+
+        unless tasks[uid]
+          tasks[uid] = {}
+          tasks[uid]["name"]  = task.watcher.name
+          tasks[uid]["email"] = task.watcher.email
+        end
+
+        unless tasks[uid]["watch"]
+          tasks[uid]["watch"] = []
+          tasks[uid]["watch"] << 'Проверяющий:'
+        end
+
+        tasks[uid]["watch"] << task.to_pretty_s
       end
 
       raise TaskError, "Tasks list is empty!" unless tasks.any?

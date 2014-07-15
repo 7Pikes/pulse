@@ -46,9 +46,9 @@ class Mail < PulseDispatch
 
     tasks.each do |key, val|
       buf = {}
-      buf["receiver"] = val["email"]
-      buf["man"] = val["name"]
-      buf["message"] = val["titles"].join("\n")
+      buf["man"]      =  val["name"]
+      buf["receiver"] =  val["email"]
+      buf["message"]  = (val["work"].to_a + val["watch"].to_a).join("\n")
       @mailing << buf
     end
 

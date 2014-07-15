@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   validates_presence_of :id, :title
 
   default_scope do
-    where("user_id is not null and phase_id in (#{Phase.active_phases})").order("user_id, id")
+    where("phase_id in (#{Phase.active_phases})").order("user_id, id")
   end
 
 
