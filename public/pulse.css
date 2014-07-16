@@ -1,0 +1,22 @@
+body, * {
+  font-family: "Helvetica Neue", sans-serif !important;
+}
+
+body {
+  background-color: #f3f3f3;
+}
+
+h1 {
+  font-weight: bold;
+  letter-spacing: -4px;
+}
+
+h1 a {
+  text-decoration: none;
+}
+
+.square li {
+  list-style: none;
+  padding: 1em;
+  background: white;
+}
