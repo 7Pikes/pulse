@@ -7,11 +7,17 @@ class PulseDispatch
     def schedule
       now = Time.now
 
-      if now.hour > 8
-        Time.local(now.year, now.month, (now.day + 1), 9, 01, 0)
-      else
-        Time.local(now.year, now.month, now.day, 9, 01, 0)
-      end
+      plan = 
+        if now.hour > 8
+          Time.local(now.year, now.month, (now.day + 1), 9, 01, 0)
+        else
+          Time.local(now.year, now.month, now.day, 9, 01, 0)
+        end
+
+      plan += 172800 if plan.saturday?
+      plan += 86400 if plan.sunday?
+
+      plan
     end
 
 
