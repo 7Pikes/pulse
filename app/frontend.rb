@@ -17,12 +17,24 @@ class Frontend < Sinatra::Base
 
     if params[:id]
       @user = User.find_by_id(params[:id])
-      @tasks = Task.where(user_id: params[:id])
+      @works = Task.where(user_id: params[:id])
+      @watches = Task.where(watcher_id: params[:id])
     end
 
     @health = Delayed::Job.where("last_error is not null").count == 0
 
     erb :default, :layout => :layout
+  end
+
+
+  get '/all' do
+    @users = User.includes(:tasks).where(
+      id: Task.select(:user_id).where("user_id is not null or watcher_id is not null").reorder(nil)
+    )  
+
+    @health = Delayed::Job.where("last_error is not null").count == 0
+
+    erb :all, :layout => :layout
   end
 
 

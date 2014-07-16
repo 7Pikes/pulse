@@ -14,8 +14,10 @@ class PulseDispatch
           Time.local(now.year, now.month, now.day, 9, 01, 0)
         end
 
-      plan += 172800 if plan.saturday?
-      plan += 86400 if plan.sunday?
+      day_length = 86400
+
+      plan += (2 * day_length) if plan.saturday?
+      plan += day_length if plan.sunday?
 
       plan
     end

@@ -11,7 +11,7 @@
         <% end %>
       </a>
 
-      <a href="/blocked" class="button" style="margin-right: 6px">Заблокированные задачи</a>
+      <a href="/default" class="button" style="margin-right: 6px">Вернуться</a>
 
     </div>
 
@@ -25,36 +25,26 @@
 </div>
 
 
-<div class="one-third column">
-  <h3>Пользователи</h3>
+<div class="sixteen column">
 
-  <ul>
-    <li>
-      <a href="/all"> <strong> Показать всех сразу </strong> </a>
-      <br/>
-      <br/>
-    </li>
+  <% @users.each do |user| %>
+    <h4>
+      Задачи для <%= user.name %>
 
-    <% @users.each do |user| %>
+      <span style="font-size: 14px">
+        [<a href="/default?id=<%= user.id %>" target="_blank">Открыть отдельно</a>]
+      </span>
+    </h4>
 
-      <li>
-        <a href="/default?id=<%= user.id %>">
-          <%= user.name %></a>
-      </li>
-
-    <% end %>
-  </ul>
-</div>
-
-<div class="two-thirds column">
-  <% if @user %>
-    <h3>Задачи для <%= @user.name %></h3>
     <br/>
 
-    <% if @works.any? %>
+
+    <% works = user.tasks %>
+
+    <% if works.any? %>
       <ul class="square">
 
-        <% @works.each do |task| %>
+        <% works.each do |task| %>
           <li>
 
             <strong 
@@ -85,14 +75,16 @@
     <% end %>
 
 
-    <% if @watches.any? %>
+    <% watches = Task.where(watcher_id: user.id) %>
 
-      <h4>Проверяет:</h4>
+    <% if watches.any? %>
+
+      <h5>Проверяет:</h5>
       <br/>
 
       <ul class="square">
 
-        <% @watches.each do |task| %>
+        <% watches.each do |task| %>
           <li>
 
             <strong 
@@ -120,11 +112,7 @@
       </ul>
     <% end %>
 
-
-  <% else %>
-    <h3>Задачи</h3>
-    <br/>
-
-    <p>Пользователь не выбран</p>
+    
   <% end %>
+
 </div>
