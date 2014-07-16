@@ -11,6 +11,10 @@ h1 {
   letter-spacing: -4px;
 }
 
+h1 a {
+  text-decoration: none;
+}
+
 .square li {
   list-style: none;
   padding: 1em;
