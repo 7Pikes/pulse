@@ -42,7 +42,7 @@ class Frontend < Sinatra::Base
 
 
   get '/default' do
-    @users = User.all
+    @users = User.where("user_id is not null or watcher_id is not null").reorder(:name)
 
     if params[:id]
       @user = User.find_by_id(params[:id])
