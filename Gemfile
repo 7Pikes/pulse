@@ -16,6 +16,7 @@ gem "mandrill-api", "= 1.0.52"
 gem "jaconda", "= 2.0.3"
 
 gem "sinatra", "= 1.4.5"
+gem "sinatra-contrib", "= 1.4.2"
 gem "unicorn", "= 4.8.3"
 
 group :development do

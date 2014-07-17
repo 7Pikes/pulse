@@ -6,19 +6,28 @@ class Frontend < Sinatra::Base
 
   use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
-  if ENV['RACK_ENV'] == 'production'
-    cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
+  helpers Sinatra::Cookies
 
-    use Rack::Session::Cookie,  key: 'rack.session', 
-                                domain: cfg["domain"], 
-                                path: '/', 
-                                expire_after: 604800, 
-                                secret: cfg["cookie_secret"]
+
+  configure do
+
+    if ENV['RACK_ENV'] == 'production'
+      cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
+
+      set :cookie_options, {
+        key: 'rack.session', 
+        domain: cfg["domain"], 
+        path: '/', 
+        expire_after: 604800, 
+        secret: cfg["cookie_secret"]
+      }
+    end
+
   end
 
 
   before do
-    redirect to '/login' unless session[:auth] = true
+    redirect to '/login' unless cookies[:auth] = true
   end
 
 
@@ -74,22 +83,23 @@ class Frontend < Sinatra::Base
   get '/login' do
     auth = OAuth::GitHub.authorization
 
-    session[:id] = auth[:session_id]
+    cookies[:id] = auth[:session_id]
 
     redirect to auth[:authorize_path]
   end
 
 
   get '/callback' do
-    redirect to '/403.html' unless session[:id] == params[:state]
+    redirect to '/403.html' unless cookies[:id] == params[:state]
 
-    session.delete(:id)
+    cookies.delete(:id)
 
     token = OAuth::GitHub.get_token(params[:code]) or redirect to '/500.html'
 
     redirect to '/403.html' unless OAuth::GitHub.validation(token)
 
-    session[:auth] = true
+    cookies[:auth] = true
+
     redirect to '/'
   end
 
