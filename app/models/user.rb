@@ -4,4 +4,8 @@ class User < ActiveRecord::Base
 
   validates_presence_of :id, :email, :name
 
+  default_scope do
+    order(:name)
+  end
+
 end

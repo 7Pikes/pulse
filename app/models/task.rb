@@ -25,7 +25,8 @@ class Task < ActiveRecord::Base
     buf << localized_phase
     buf << ' c '
     buf << localized_date
-    buf << '.'
+    buf << ' - '
+    buf << Shortener.link(global_in_context_url)
 
     buf.join
   end

@@ -42,7 +42,7 @@ class Frontend < Sinatra::Base
 
 
   get '/default' do
-    @users = User.where("user_id is not null or watcher_id is not null").reorder(:name)
+    @users = User.where("user_id is not null or watcher_id is not null")
 
     if params[:id]
       @user = User.find_by_id(params[:id])
@@ -59,7 +59,7 @@ class Frontend < Sinatra::Base
   get '/all' do
     @users = User.includes(:tasks).where(
       id: Task.select(:user_id).where("user_id is not null or watcher_id is not null").reorder(nil)
-    )  
+    )
 
     @health = Delayed::Job.where("last_error is not null").count == 0
 
