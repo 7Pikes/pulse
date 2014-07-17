@@ -25,7 +25,7 @@ module OAuth
 
         {
           session_id: session_id,
-          authorize_path: "#{@@web_host}/login/oauth/authorize?client_id=#{@@client_id}&state=#{session_id}"
+          authorize_path: "#{@@web_addr}/login/oauth/authorize?client_id=#{@@client_id}&state=#{session_id}"
         }
       end
 
@@ -33,18 +33,18 @@ module OAuth
       def get_token(auth_code)
         params = {client_id: @@client_id, client_secret: @@client_secret, code: auth_code}
 
-        response = http_post("#{@@web_host}/login/oauth/access_token", params)
+        response = http_post("#{@@web_addr}/login/oauth/access_token", params)
 
         response["access_token"]
       end
 
 
       def validation(access_token)
-        response = http_get("#{@@api_host}/user", {access_token: access_token})
+        response = http_get("#{@@api_addr}/user", {access_token: access_token})
 
         login = response["login"] or return false
 
-        response = http_get("#{@@api_host}/orgs/#{@@organisation}/members", {access_token: access_token})
+        response = http_get("#{@@api_addr}/orgs/#{@@organisation}/members", {access_token: access_token})
 
         response.map { |member| member["login"] }.include?(login)
 
@@ -59,6 +59,7 @@ module OAuth
       def http_post(uri, params={})
         response = Curl.post(uri, params) do |curl|
           curl.headers["Accept"] = 'application/json'
+          curl.headers["User-Agent"] = "7Pikes Pule Bot"
         end
 
         JSON.parse(response.body)
@@ -68,6 +69,7 @@ module OAuth
       def http_get(uri, params={})
         response = Curl.get(uri, params) do |curl|
           curl.headers["Accept"] = 'application/json'
+          curl.headers["User-Agent"] = "7Pikes Pule Bot"
         end
 
         JSON.parse(response.body)
