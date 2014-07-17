@@ -16,3 +16,6 @@ require 'erb'
 
 db = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
 ActiveRecord::Base.establish_connection(db)
+
+github = YAML.load_file(File.expand_path('../credentials.yml', __FILE__))["github"]
+OAuth::GitHub.config(github)
