@@ -5,7 +5,16 @@ class Frontend < Sinatra::Base
   set :views, Proc.new { File.join(root, "app", "views") }
 
   use ActiveRecord::ConnectionAdapters::ConnectionManagement
-  use Rack::Session::Cookie, cookie_parameters
+
+  if ENV['RACK_ENV'] == 'production'
+    cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
+
+    use Rack::Session::Cookie,  key: 'rack.session', 
+                                domain: cfg["domain"], 
+                                path: '/', 
+                                expire_after: 604800, 
+                                secret: cfg["cookie_secret"]
+  end
 
 
   before do
@@ -82,27 +91,6 @@ class Frontend < Sinatra::Base
 
     session[:auth] = true
     redirect to '/'
-  end
-
-
-  private
-
-
-  def self.cookie_parameters
-    if ENV['RACK_ENV'] == 'production'
-      cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
-
-      {
-        key: 'rack.session', 
-        domain: cfg["domain"], 
-        path: '/', 
-        expire_after: 604800, 
-        secret: cfg["cookie_secret"]
-      }
-    else
-      {}
-    end
-
   end
 
 end
