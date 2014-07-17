@@ -10,7 +10,3 @@
 
 * Create a new kanbanery account.
 * Mysql user.
-
-## Notes:
-
-* If somebody is fired then we should to renew an cookie_secret.

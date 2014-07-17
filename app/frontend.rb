@@ -13,13 +13,7 @@ class Frontend < Sinatra::Base
     if ENV['RACK_ENV'] == 'production'
       cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
 
-      set :cookie_options, {
-        key: 'rack.session', 
-        domain: cfg["domain"], 
-        path: '/', 
-        expire_after: 604800, 
-        secret: cfg["cookie_secret"]
-      }
+      set :cookie_options, {domain: cfg["domain"], path: '/'}
     end
   end
 
