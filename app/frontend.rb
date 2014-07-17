@@ -88,7 +88,7 @@ class Frontend < Sinatra::Base
   private
 
 
-  def cookie_parameters
+  def self.cookie_parameters
     if ENV['RACK_ENV'] == 'production'
       cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
 
