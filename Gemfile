@@ -14,6 +14,7 @@ gem "daemons", "= 1.1.9"
 gem "curb", "= 0.8.5"
 gem "mandrill-api", "= 1.0.52"
 gem "jaconda", "= 2.0.3"
+gem "goshortener", "= 1.2.2"
 
 gem "sinatra", "= 1.4.5"
 gem "sinatra-contrib", "= 1.4.2"

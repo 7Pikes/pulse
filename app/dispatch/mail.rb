@@ -61,9 +61,6 @@ class Mail < PulseDispatch
   def prepare_messages_bodies
     @mailing.map! do |mail|
 
-      mail["receiver"] = 'd.kazantsev@7pikes.com'
-      # FIXME
-
       message = {
         subject: @@subject,
         text: mail["message"],
