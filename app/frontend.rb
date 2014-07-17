@@ -10,7 +10,6 @@ class Frontend < Sinatra::Base
 
 
   configure do
-
     if ENV['RACK_ENV'] == 'production'
       cfg = YAML.load_file(File.expand_path('config/credentials.yml', root))["sinatra"]
 
@@ -22,12 +21,24 @@ class Frontend < Sinatra::Base
         secret: cfg["cookie_secret"]
       }
     end
+  end
 
+
+  helpers do
+    def login!
+      return true if request.path_info == '/callback'
+
+      auth = OAuth::GitHub.authorization
+
+      cookies[:id] = auth[:session_id]
+
+      redirect to auth[:authorize_path]
+    end
   end
 
 
   before do
-    redirect to '/login' unless cookies[:auth] = true
+    login! unless cookies[:auth]
   end
 
 
@@ -77,15 +88,6 @@ class Frontend < Sinatra::Base
     @jobs = Delayed::Job.select(:attempts, :run_at, :locked_at, :queue, :failed_at, :last_error)
 
     erb :status, :layout => :layout
-  end
-
-
-  get '/login' do
-    auth = OAuth::GitHub.authorization
-
-    cookies[:id] = auth[:session_id]
-
-    redirect to auth[:authorize_path]
   end
 
 

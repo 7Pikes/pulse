@@ -1,6 +1,9 @@
 module OAuth
   class GitHub
 
+    require 'active_support/core_ext/object/to_query'
+
+
     # Here we have 3 steps:
     # 1. Github authorization part one: check the user, get an auth code.
     # 2. Github authorization part two: get an API access token.
@@ -66,7 +69,8 @@ module OAuth
 
 
       def http_get(uri, params={})
-        response = Curl.get(uri, params) do |curl|
+
+        response = Curl.get("#{uri}?#{params.to_query}") do |curl|
           curl.headers["Accept"] = 'application/json'
         end
 
