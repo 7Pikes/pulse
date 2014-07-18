@@ -15,6 +15,12 @@ class Mail < PulseDispatch
     end
 
 
+    def schedule
+      # 9-minute delay caused by GoShortener limitations
+      super + 540
+    end
+
+
     def initialize_queue
       return true if Delayed::Job.where(queue: 'mail').count > 0
 
