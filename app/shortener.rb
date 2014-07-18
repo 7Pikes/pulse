@@ -14,7 +14,7 @@ module Shortener
     def link(uri)
       # Google API token works only with known ips.
       @@gate.shorten uri
-    rescue
+    rescue Exception
       uri
     end
 
