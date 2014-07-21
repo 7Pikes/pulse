@@ -54,7 +54,7 @@ class Mail < PulseDispatch
       buf = {}
       buf["man"]      =  val["name"]
       buf["receiver"] =  val["email"]
-      buf["message"]  = (val["work"].to_a + val["watch"].to_a).join("\n")
+      buf["message"]  = (val["work"].to_a + val["watch"].to_a).join("<br/>")
       @mailing << buf
     end
 
@@ -69,7 +69,7 @@ class Mail < PulseDispatch
 
       message = {
         subject: @@subject,
-        text: mail["message"],
+        html: mail["message"],
         to: [ {email: mail["receiver"], name: mail["man"]} ],
         from_email: @@sender
       }
