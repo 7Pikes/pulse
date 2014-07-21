@@ -16,17 +16,20 @@ class Task < ActiveRecord::Base
   end
 
 
-  def to_pretty_s
+  def to_pretty_s(target = :default)
     buf = []
 
-    buf << (blocked ? '(Заблокирована) ' : '')
+    if target == :default
+      buf << (blocked ? '(Заблокирована) ' : '')
+    end
+    
     buf << title
     buf << ', '
     buf << localized_phase
     buf << ' c '
     buf << localized_date
     buf << ' - '
-    buf << Shortener.link(global_in_context_url)
+    buf << '<a href="' + global_in_context_url + '">Открыть</a>'
 
     buf.join
   end
@@ -74,7 +77,15 @@ class Task < ActiveRecord::Base
 
 
   def deadlines_list
-    deadlines.sort.map { |d| d.deadline.strftime("%Y-%m-%d") }.join(', ')
+    array = deadlines.sort.map { |d| d.deadline.strftime("%Y-%m-%d") }
+
+    return '' unless array.any?
+
+    str = "(#{array.count}): "
+    array[0...-1].each { |el| str += "<strike>#{el}</strike>, " }
+    str += array[-1]
+
+    str
   end
 
 end

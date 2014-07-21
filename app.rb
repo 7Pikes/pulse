@@ -20,7 +20,7 @@ Chat.initialize_queue
 Mail.config(credentials["mandrill"])
 Mail.initialize_queue
 
-Shortener.config(credentials["shortener"])
+# Shortener.config(credentials["shortener"])
 
 environment = ENV['RACK_ENV']
 

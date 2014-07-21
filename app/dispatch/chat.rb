@@ -21,6 +21,30 @@ class Chat < PulseDispatch
       Delayed::Job.enqueue Chat.new, {run_at: schedule, queue: 'chat'}
     end
 
+
+    def get_tasks_list
+      # Lists only blocked tasks
+
+      tasks = {}
+
+      Task.includes(:user, :phase).where("user_id is not null and blocked is true").each do |task|
+        uid = task.user_id
+
+        unless tasks[uid]
+          tasks[uid] = {}
+          tasks[uid]["work"]  = []
+          tasks[uid]["name"]  = task.user.name
+          tasks[uid]["email"] = task.user.email
+        end
+
+        tasks[uid]["work"] << task.to_pretty_s(:blocked)
+      end
+
+      raise TaskError, "Tasks list is empty!" unless tasks.any?
+
+      tasks
+    end
+
   end
 
 
@@ -44,10 +68,14 @@ class Chat < PulseDispatch
 
     buf = []
 
+    buf << "Доброе утро, 7пайкс!"
+    buf << "Перед первой чашкой кофе обратите внимание на следующие заблокированные задачи:"
+    buf << " "
+
     tasks.each do |key, val|
       buf << "Задачи #{val["name"]}:"
-      (val["work"].to_a + val["watch"].to_a).each { |title| buf << title }
-      buf << ' '      
+      val["work"].each { |title| buf << title }
+      buf << " "
     end
 
     @brief = buf.join("\n")
