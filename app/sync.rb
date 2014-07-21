@@ -128,7 +128,18 @@ class Sync
     Phase.delete_all if @phases.any?
     Task.delete_all if @tasks.any?
 
+    store_users!
+    store_phases!
+    store_tasks!
 
+    store_deadines!
+    store_blocks!
+
+    true
+  end
+
+
+  def store_users!
     @users.each do |user|
       begin    
         User.create(id: user["id"], email: user["email"], name: user["name"])
@@ -137,7 +148,10 @@ class Sync
         puts e.message
       end
     end
+  end
 
+
+  def store_phases!
     @phases.each do |phase|
       begin        
         Phase.create(id: phase["id"], name: phase["name"], position: phase["position"])
@@ -146,7 +160,10 @@ class Sync
         puts e.message
       end
     end
+  end
 
+
+  def store_tasks!
     @tasks.each do |task|
       task = handle_task_watcher(task)
 
@@ -168,7 +185,10 @@ class Sync
         puts e.message
       end
     end
+  end
 
+
+  def store_deadines!
     @tasks.each do |task|
       next unless task["deadline"]
 
@@ -179,8 +199,15 @@ class Sync
         puts e.message
       end
     end
+  end
 
-    true
+
+  def store_blocks!    
+    BlockedByDays.create(
+      count: Task.where(blocked: true).count,
+      day: Time.now.beginning_of_day.to_s(:db)
+    )
+  rescue ActiveRecord::RecordNotUnique
   end
 
 

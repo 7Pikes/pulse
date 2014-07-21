@@ -1,20 +1,21 @@
 <div class="sixteen columns">
-  <h1 class="remove-bottom" style="margin-top: 40px"> Pulse
 
-    <div id="buttons" style="float: right">
+  <div id="buttons" style="float: right; margin-top: 50px">
 
-      <a href="/status" class="button" title="Демон отработал без ошибок?">Статус: 
-        <% if @health %>
-          <span style="color: green">Норм.</span>
-        <% else %>
-          <span style="color: red">Ошиб.</span>
-        <% end %>
-      </a>
+    <a href="/status" class="button" title="Демон отработал без ошибок?">Статус:
+      <% if @health %>
+        <span style="color: green">Норм.</span>
+      <% else %>
+        <span style="color: red">Ошиб.</span>
+      <% end %>
+    </a>
 
-      <a href="/default" class="button" style="margin-right: 6px">Вернуться</a>
+    <a href="/default" class="button" style="margin-right: 6px">Вернуться</a>
 
-    </div>
+  </div>
 
+  <h1 class="remove-bottom" style="margin-top: 40px">
+    <a href="/">Pulse</a>
   </h1>
 
   <h5>

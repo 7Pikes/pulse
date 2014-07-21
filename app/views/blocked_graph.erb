@@ -28,34 +28,29 @@
 
 <div class="sixteen column">
 
-  <% @users.each do |user| %>
-    <h4>Заблокированные задачи <%= user.name %></h4>
-    <br/>
+  <script src="https://www.google.com/jsapi"></script>
 
-    <ul class="square">
+  <script>
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
 
-      <% user.tasks.each do |task| %>
-        <% next unless task.blocked %>
+   function drawChart() {
+    var data = google.visualization.arrayToDataTable(
+      <%= [['Дата', 'Количество']] + @blocks %>
+    );
 
-        <li>
-          <strong><%= task.title %></strong> [<%= task.localized_phase %>]
+    var options = {
+     title: 'Заблокированные задачи',
+     hAxis: {title: 'Дата'},
+     vAxis: {title: 'Кол-во'}
+    };
 
-          <br/>
-          <br/>
+    var chart = new google.visualization.ColumnChart(document.getElementById('blocks'));
 
-          <a href="<%= task.global_in_context_url %>" target="_blank">Открыть карточку</a>
-
-          <% unless task.deadlines_list.empty? %>
-            | <em> Дедлайн: <%= task.deadlines_list %> </em>
-          <% end %>
-
-          <br/>
-          <br/>
-        </li>
-
-      <% end %>
-
-    </ul>
-  <% end %>
+    chart.draw(data, options);
+   }
+  </script>
+ 
+  <div id="blocks" style="min-width: 960px; height: 450px;"></div>
 
 </div>

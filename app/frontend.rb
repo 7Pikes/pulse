@@ -20,6 +20,8 @@ class Frontend < Sinatra::Base
 
   helpers do
     def login!
+      return true if ENV['RACK_ENV'] != 'production'
+
       return true if request.path_info == '/callback'
 
       auth = OAuth::GitHub.authorization
@@ -77,6 +79,16 @@ class Frontend < Sinatra::Base
     @health = Delayed::Job.where("last_error is not null").count == 0
 
     erb :blocked, :layout => :layout
+  end
+
+  get '/blocked_graph' do
+    @blocks = BlockedByDays.order("day DESC").limit(14).reverse.map do |b|
+      [b.day.strftime("%d/%m"), b.count]
+    end
+
+    @health = Delayed::Job.where("last_error is not null").count == 0
+
+    erb :blocked_graph, :layout => :layout
   end
 
 
