@@ -36,15 +36,39 @@
   <% position = 0 %>
 
   <% @calendar.sizes[1].times do %>
-    <% @calendar.sizes[0].times do %>
+    <% @calendar.sizes[0].times do |column| %>
+
+      <% weekend = (column == 5 or column == 6) %>
 
       <% position += 1 %>
       <% date = @calendar.at_position(position) %>
 
       <div class="one column">
-        <div class="calendar tile" id="tile_<%= position %>">
 
-          <%= date %> <br/>
+        <% today = false %>
+        
+        <% if date == Time.now.day %>
+          <% if !params[:y] or params[:y] = Time.now.year %>
+            <% if !params[:m] or params[:m] = Time.now.month %>
+
+              <% today = true %>
+
+            <% end %>
+          <% end %>
+        <% end %>
+
+
+
+        <div class="calendar tile <%= 'today' if today %> <%= 'weekend' if weekend %>" 
+          id="tile_<%= position %>">
+
+          <% if today %>
+            <strong> <%= date %> </strong> (сегодня)
+          <% else %>
+            <%= date %>
+          <% end %>
+
+          <br/>
 
           <% if @plan[date] %>
 

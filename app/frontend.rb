@@ -108,7 +108,11 @@ class Frontend < Sinatra::Base
       @plan[d.deadline.day] << {"title" => d.task.title, "url" => d.task.global_in_context_url}
     end
 
-    @all_deadlines = Deadline.includes(:task).where(task_id: Task.all).order(:deadline)
+    @all_deadlines = Deadline.includes(:task).
+      select("task_id, max(deadline) as deadline").
+      where(task_id: Task.all).
+      group(:task_id).
+      order(:deadline)
 
     @health = Delayed::Job.where("last_error is not null").count == 0
     

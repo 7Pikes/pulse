@@ -35,6 +35,15 @@ h1 a {
   font-size: 10px;
 }
 
+.calendar.tile.today {
+  background-color: #659ec7;
+}
+
+.calendar.tile.weekend {
+  background-color: #fdd7e4;
+}
+
+
 .calendar.tile .popup {
   position: relative;
   width: 200px;
