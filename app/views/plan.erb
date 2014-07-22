@@ -48,8 +48,8 @@
         <% today = false %>
         
         <% if date == Time.now.day %>
-          <% if !params[:y] or params[:y] == Time.now.year %>
-            <% if !params[:m] or params[:m] == Time.now.month %>
+          <% if !params[:y] or params[:y].to_i == Time.now.year %>
+            <% if !params[:m] or params[:m].to_i == Time.now.month %>
 
               <% today = true %>
 
