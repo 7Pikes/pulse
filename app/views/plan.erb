@@ -75,7 +75,7 @@
                 document.getElementById('content_<%= position %>').style.display = 'none';
                 document.getElementById('popup_<%= position %>').style.display = 'block';
               }
-              
+
               e.onmouseout = function() {
                 document.getElementById('popup_<%= position %>').style.display = 'none';
                 document.getElementById('content_<%= position %>').style.display = 'block';    
@@ -105,5 +105,32 @@
     </div>
 
   <% end %>
+
+</div>
+
+
+<div class="seven columns">
+
+  <br/> <br/>
+
+  <strong>Предстящие дедлайны:</strong>
+
+  <br/> <br/>
+
+  <ul>
+
+    <% @all_deadlines.each do |d| %>
+      <li>
+
+        <strong> <%= d.deadline.strftime("%d-%m-%Y") %> </strong>
+
+        <%= d.task.title %> 
+
+        [<a href="<%= d.task.id %>" target="_blank">Открыть карточку</a>]
+
+      </li>
+    <% end %>
+
+  </ul>
 
 </div>
