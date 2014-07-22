@@ -1,0 +1,21 @@
+<div class="sixteen columns">
+
+  <% position = 0 %>
+
+  <% @calendar.sizes[1].times do %>
+    <% @calendar.sizes[0].times do %>
+
+      <% position += 1 %>
+
+      <div class="two columns">
+        <div class="calendar tile">
+
+         <%= @calendar.at_position(position) %>
+
+        </div>
+      </div>
+
+    <% end %>
+  <% end %>
+
+</div>

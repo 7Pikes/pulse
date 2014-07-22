@@ -91,6 +91,12 @@ class Frontend < Sinatra::Base
     erb :blocked_graph, :layout => :layout
   end
 
+  get '/plan' do
+    @calendar = Calendar.new
+    
+    erb :plan, :layout => :layout
+  end
+
 
   get '/status' do
     @jobs = Delayed::Job.select(:attempts, :run_at, :locked_at, :queue, :failed_at, :last_error)
