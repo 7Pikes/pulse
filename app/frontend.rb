@@ -93,6 +93,16 @@ class Frontend < Sinatra::Base
 
   get '/plan' do
     @calendar = Calendar.new
+
+    deadlines = Deadline.where("deadline between ? and ?", @calendar.period(:start),
+      @calendar.period(:end)).where(task_id: Task.all).order(:deadline)
+
+    @plan = {}
+
+    deadlines.each do |d|
+      @plan[d.deadline.day] ||= []
+      @plan[d.deadline.day] << {"title" => d.task.title, "url" => d.task.global_in_context_url}
+    end
     
     erb :plan, :layout => :layout
   end

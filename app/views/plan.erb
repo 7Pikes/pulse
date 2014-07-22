@@ -6,11 +6,21 @@
     <% @calendar.sizes[0].times do %>
 
       <% position += 1 %>
+      <% date = @calendar.at_position(position) %>
 
       <div class="two columns">
         <div class="calendar tile">
 
-         <%= @calendar.at_position(position) %>
+          <%= date %>
+          <br/>
+
+          <% @plan[date].to_a.each_with_index do |row, ind| %>
+
+            <a href="<%= row["url"] %>" title="<%= row["title"] %>" target="_blank">
+              #<%= ind %>
+            </a>
+
+          <% end %>
 
         </div>
       </div>

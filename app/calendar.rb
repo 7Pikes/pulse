@@ -12,13 +12,16 @@ class Calendar
     raise "Month is out of range" unless @month > 0 and @month < 13
   end
 
+
   def mdays
     @mdays ||= ((@month == 2 and Date.gregorian_leap? @year) ? 29 : MD[@month - 1])
   end
 
+
   def start_wday
     @start_wday ||= Time.mktime(@year, @month, 01).wday
   end
+
 
   def at_position(index = 1)
     mday = index - start_wday + 1
@@ -27,6 +30,7 @@ class Calendar
 
     mday
   end
+
 
   def sizes
     ind = 1
@@ -38,6 +42,21 @@ class Calendar
 
     # columns per rows
     [7, (ind / 7) + (ind % 7 == 0 ? 0 : 1)]
+  end
+
+
+  def period(subject = nil)
+    case subject
+    when :start
+      Time.mktime(@year, @month, 1).strftime("%Y-%m-%d")
+    when :end
+      Time.mktime(@year, @month, mdays).strftime("%Y-%m-%d")
+    else
+      [
+        Time.mktime(@year, @month, 1).strftime("%Y-%m-%d"),
+        Time.mktime(@year, @month, mdays).strftime("%Y-%m-%d")
+      ]
+    end
   end
 
 end
