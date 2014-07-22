@@ -91,11 +91,15 @@ class Frontend < Sinatra::Base
     erb :blocked_graph, :layout => :layout
   end
 
+
   get '/plan' do
     @calendar = Calendar.new(params[:y], params[:m])
 
-    deadlines = Deadline.where("deadline between ? and ?", @calendar.period(:start),
-      @calendar.period(:end)).where(task_id: Task.all).order(:deadline)
+    deadlines = Deadline.select("task_id, max(deadline) as deadline").
+      where("deadline between ? and ?", @calendar.period(:start), @calendar.period(:end)).
+      where(task_id: Task.all).
+      group(:task_id).
+      order(:deadline)
 
     @plan = {}
 
