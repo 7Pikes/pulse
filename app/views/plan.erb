@@ -1,5 +1,50 @@
 <div class="sixteen columns">
 
+  <div id="buttons" style="float: right; margin-top: 50px">
+
+    <a href="/status" class="button" title="Демон отработал без ошибок?">Статус:
+      <% if @health %>
+        <span style="color: green">Норм.</span>
+      <% else %>
+        <span style="color: red">Ошиб.</span>
+      <% end %>
+    </a>
+
+    <a href="/default" class="button" style="margin-right: 6px">Показать все задачи</a>
+
+  </div>
+
+  <h1 class="remove-bottom" style="margin-top: 40px">
+    <a href="/">Pulse</a>
+  </h1>
+
+  <h5>
+    Веб-мордочка для отображения текущих задач
+  </h5>
+  
+  <hr />
+</div>
+
+
+<div class="sixteen columns">
+
+  <% 5.times do |i| %>
+
+    <div class="three columns">
+      <% month = @calendar.offset(i - 1) %>
+      <a href="/plan?y=<%= month[:year] %>&m=<%= month[:month] %>"> <%= month[:label] %> </a>
+    </div>
+
+  <% end %>
+
+  <br/>
+  <br/>
+
+</div>
+
+
+<div class="sixteen columns">  
+
   <% position = 0 %>
 
   <% @calendar.sizes[1].times do %>

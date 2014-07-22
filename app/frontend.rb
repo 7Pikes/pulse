@@ -92,7 +92,7 @@ class Frontend < Sinatra::Base
   end
 
   get '/plan' do
-    @calendar = Calendar.new
+    @calendar = Calendar.new(params[:y], params[:m])
 
     deadlines = Deadline.where("deadline between ? and ?", @calendar.period(:start),
       @calendar.period(:end)).where(task_id: Task.all).order(:deadline)
@@ -103,6 +103,8 @@ class Frontend < Sinatra::Base
       @plan[d.deadline.day] ||= []
       @plan[d.deadline.day] << {"title" => d.task.title, "url" => d.task.global_in_context_url}
     end
+
+    @health = Delayed::Job.where("last_error is not null").count == 0
     
     erb :plan, :layout => :layout
   end

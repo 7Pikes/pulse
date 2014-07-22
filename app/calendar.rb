@@ -1,11 +1,14 @@
-class Calendar
-  require 'date'
+#encoding: utf-8
 
+class Calendar
   MD = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31].freeze
 
 
-  def initialize(year = Time.now.year, month = Time.now.month)
-    @year = year
+  def initialize(year, month)
+    year ||= Time.now.year
+    month ||= Time.now.month
+
+    @year = year.to_i
     @month = month.to_i
 
     raise "Year is out of range" unless @year > 2000 and @year < 2050
@@ -57,6 +60,42 @@ class Calendar
         Time.mktime(@year, @month, mdays).strftime("%Y-%m-%d")
       ]
     end
+  end
+
+
+  def offset(step = 1)
+
+    if step >= 0
+
+      if @month + step > 12
+        nm = step - (12 - @month)
+        ny = @year + 1
+      else
+        nm = step + @month
+        ny = @year
+      end
+
+    else
+
+      step *= -1
+
+      if @month - step < 1
+        nm = 12 - step + @month
+        ny = @year - 1
+      else
+        nm = @month - step
+        ny = @year
+      end
+
+    end
+
+    current_month = !!(nm == Time.now.month.to_i and ny == Time.now.year.to_i)
+
+    {
+      year: ny,
+      month: nm,
+      label: (current_month ? 'Этот месяц' : Time.mktime(ny, nm, 1).strftime("%m/%y"))
+    }
   end
 
 end
