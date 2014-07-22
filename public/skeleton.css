@@ -11,6 +11,7 @@
 /* Table of Contents
 ==================================================
     #Base 960 Grid
+    #Wide 1200 Grid
     #Clearing */
 
 
@@ -66,11 +67,28 @@
     .container .offset-by-fifteen               { padding-left: 900px; }
 
 
+/* #Wide 1200 Grid
+================================================== */
+
+    .container-wide                                  { position: relative; width: 1190px; margin: 0 auto; padding: 0; }
+    .container-wide .column,
+    .container-wide .columns                         { float: left; display: inline; margin-left: 0px; margin-right: 0px; }
+
+    .container-wide .one.column,
+    .container-wide .one.columns                     { width: 170px;  }
+    .container-wide .two.columns                     { width: 340px; }
+    .container-wide .three.columns                   { width: 510px; }
+    .container-wide .four.columns                    { width: 680px; }
+    .container-wide .five.columns                    { width: 850px; }
+    .container-wide .six.columns                     { width: 1020px; }
+    .container-wide .seven.columns                   { width: 1190px; }
+
+
 /* #Clearing
 ================================================== */
 
     /* Self Clearing Goodness */
-    .container:after { content: "\0020"; display: block; height: 0; clear: both; visibility: hidden; }
+    .container:after, .container-wide:after { content: "\0020"; display: block; height: 0; clear: both; visibility: hidden; }
 
     /* Use clearfix class on parent to clear nested columns,
     or wrap each row of columns in a <div class="row"> */

@@ -110,7 +110,7 @@ class Frontend < Sinatra::Base
 
     @health = Delayed::Job.where("last_error is not null").count == 0
     
-    erb :plan, :layout => :layout
+    erb :plan, :layout => :layout_wide
   end
 
 

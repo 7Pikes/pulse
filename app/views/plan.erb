@@ -1,4 +1,4 @@
-<div class="sixteen columns">
+<div class="seven columns">
 
   <div id="buttons" style="float: right; margin-top: 50px">
 
@@ -26,24 +26,12 @@
 </div>
 
 
-<div class="sixteen columns">
 
-  <% 5.times do |i| %>
+<div class="seven columns">
 
-    <div class="three columns">
-      <% month = @calendar.offset(i - 1) %>
-      <a href="/plan?y=<%= month[:year] %>&m=<%= month[:month] %>"> <%= month[:label] %> </a>
-    </div>
-
-  <% end %>
-
+  <strong>План дедлайнов</strong>
   <br/>
   <br/>
-
-</div>
-
-
-<div class="sixteen columns">  
 
   <% position = 0 %>
 
@@ -53,24 +41,69 @@
       <% position += 1 %>
       <% date = @calendar.at_position(position) %>
 
-      <div class="two columns">
-        <div class="calendar tile">
+      <div class="one column">
+        <div class="calendar tile" id="tile_<%= position %>">
 
-          <%= date %>
-          <br/>
+          <%= date %> <br/>
 
-          <% @plan[date].to_a.each_with_index do |row, ind| %>
+          <% if @plan[date] %>
 
-            <a href="<%= row["url"] %>" title="<%= row["title"] %>" target="_blank">
-              #<%= ind %>
-            </a>
+            <div id="popup_<%= position %>" class="popup" style="display: none">
+              <ol>
 
-          <% end %>
+                <% @plan[date].each do |row| %>
+                  <li> <a href="<%= row["url"] %>" target="_blank"><%= row["title"] %></a> </li>
+                <% end %>
+
+              </ol>
+            </div>
+
+            <div id="content_<%= position %>">
+
+              <% @plan[date][0..1].each do |row| %>
+                <%= row["title"].truncate(30, omission: '&#8230;') %> <br/>
+              <% end %>
+
+              <%= "+ Ещё #{(@plan[date].count - 2)}&#8230;" if @plan[date].count > 2 %>
+
+            </div>
+
+            <script>
+              var e = document.getElementById('tile_<%= position %>');
+
+              e.onmouseover = function() {
+                document.getElementById('content_<%= position %>').style.display = 'none';
+                document.getElementById('popup_<%= position %>').style.display = 'block';
+              }
+              
+              e.onmouseout = function() {
+                document.getElementById('popup_<%= position %>').style.display = 'none';
+                document.getElementById('content_<%= position %>').style.display = 'block';    
+              }
+            </script>
+
+          <% end %>          
 
         </div>
       </div>
 
     <% end %>
+  <% end %>
+
+</div>
+
+
+<div class="seven columns">
+
+  <br/>
+
+  <% 7.times do |i| %>
+
+    <div class="one column">
+      <% month = @calendar.offset(i - 3) %>
+      <a href="/plan?y=<%= month[:year] %>&m=<%= month[:month] %>"> <%= month[:label] %> </a>
+    </div>
+
   <% end %>
 
 </div>
