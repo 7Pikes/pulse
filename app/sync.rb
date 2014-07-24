@@ -87,6 +87,7 @@ class Sync
 
     @tasks.each do |task|
       task["movement"] = fetch_task_movement(task["id"])
+      task["blockers"] = fetch_task_blokers(task["id"], task["blocked"])
     end
 
     true
@@ -94,7 +95,7 @@ class Sync
 
 
   def fetch_task_movement(task_id)
-    uri = "https://7pikes.kanbanery.com/api/v1/tasks/#{task_id}/events.json"
+    uri = "https://#{@@host}/api/#{@@api}/tasks/#{task_id}/events.json"
 
     events = http_request(uri)
     events = JSON.parse(events.body)
@@ -123,6 +124,27 @@ class Sync
   end
 
 
+  def fetch_task_blokers(task_id, blocked)
+    return [] unless blocked
+
+    uri = "https://#{@@host}/api/#{@@api}/tasks/#{task_id}/blockings.json"
+
+    blocks = http_request(uri)
+    blocks = JSON.parse(blocks.body)
+
+    buf = []
+
+    blocks.each do |block|
+      message = block["blocking_message"]
+      message ||= Task.find_by_id(block["blocking_task_id"]).try(:title).to_s
+
+      buf << {message: message, created: block["created_at"]}
+    end
+
+    buf
+  end
+
+
   def update_storage
     User.delete_all if @users.any?
     Phase.delete_all if @phases.any?
@@ -134,6 +156,10 @@ class Sync
 
     store_deadines!
     store_blocks!
+
+    Blocker.delete_all
+
+    store_blockers!
 
     true
   end
@@ -202,12 +228,23 @@ class Sync
   end
 
 
-  def store_blocks!    
+  def store_blocks! 
+
     BlockedByDays.create(
       count: Task.where(blocked: true).count,
       day: Time.now.beginning_of_day.to_s(:db)
     )
+
   rescue ActiveRecord::RecordNotUnique
+  end
+
+  def store_blockers!
+    @tasks.each do |task|
+      begin
+        task["blockers"].each { |blocker| Blocker.create(blocker) }
+      rescue ActiveRecord::RecordNotUnique
+      end
+    end
   end
 
 

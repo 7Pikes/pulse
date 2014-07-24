@@ -8,6 +8,7 @@ class Task < ActiveRecord::Base
   belongs_to :phase
 
   has_many :deadlines
+  has_many :blockers
 
   validates_presence_of :id, :title
 

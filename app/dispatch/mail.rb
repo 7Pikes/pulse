@@ -143,8 +143,6 @@ class Mail < PulseDispatch
   def prepare_messages_bodies
     @mailing.map! do |mail|
 
-      mail["receiver"] = 'd.kazantsev@7pikes.com'
-
       message = {
         subject: @@subject,
         html: mail["message"],
