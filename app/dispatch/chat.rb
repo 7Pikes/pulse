@@ -37,7 +37,7 @@ class Chat < PulseDispatch
           tasks[uid]["email"] = task.user.email
         end
 
-        tasks[uid]["work"] << task.to_pretty_s(:blocked)
+        tasks[uid]["work"] << task.make_pretty(:blocked)
       end
 
       raise TaskError, "Tasks list is empty!" unless tasks.any?

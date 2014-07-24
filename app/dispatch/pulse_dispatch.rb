@@ -31,12 +31,13 @@ class PulseDispatch
 
         unless tasks[uid]
           tasks[uid] = {}
-          tasks[uid]["work"]  = []
           tasks[uid]["name"]  = task.user.name
           tasks[uid]["email"] = task.user.email
         end
 
-        tasks[uid]["work"] << task.to_pretty_s
+        tasks[uid]["work"] = [] unless tasks[uid]["work"]
+
+        tasks[uid]["work"] << task.make_pretty(:array)
       end
 
       Task.includes(:watcher, :phase).where("watcher_id is not null").each do |task|
@@ -48,12 +49,9 @@ class PulseDispatch
           tasks[uid]["email"] = task.watcher.email
         end
 
-        unless tasks[uid]["watch"]
-          tasks[uid]["watch"] = []
-          tasks[uid]["watch"] << 'Проверяющий:'
-        end
+        tasks[uid]["watch"] = [] unless tasks[uid]["watch"]
 
-        tasks[uid]["watch"] << task.to_pretty_s
+        tasks[uid]["watch"] << task.make_pretty(:array)
       end
 
       raise TaskError, "Tasks list is empty!" unless tasks.any?

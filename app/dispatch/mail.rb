@@ -54,7 +54,83 @@ class Mail < PulseDispatch
       buf = {}
       buf["man"]      =  val["name"]
       buf["receiver"] =  val["email"]
-      buf["message"]  = (val["work"].to_a + val["watch"].to_a).join("<br/>")
+
+      if val["work"]
+
+        buf["message"]  = <<-EOS
+        <p>Товарищ! Убедись, что у тебя нет заблокированных задач.</p>
+        <strong>Задачи:</strong>
+        <br/>
+        <table>
+          <thead>
+            <tr>
+              <th>Блокировка</th>
+              <th>Заголовок</th>
+              <th>Статус</th>
+              <th>С какого числа</th>
+            </tr>
+          </thead>
+          <tbody>
+        EOS
+
+        val["work"].each do |task|
+          buf["message"] += <<-EOS
+              <tr>
+                <td>#{task[0] ? 'есть' : 'нет'}</td>
+                <td><a href="#{task[2]}" target="_blank">#{task[1]}</a></td>
+                <td>#{task[3]}</td>
+                <td>#{task[4]}</td>
+              </tr>
+          EOS
+        end
+
+        buf["message"] += <<-EOS
+          </tbody>
+        </table>
+        <br/>
+        <br/>
+        EOS
+
+      end
+
+
+      if val["watch"]
+
+        buf["message"]  = <<-EOS
+        <strong>Наблюдаемые задачи:</strong>
+        <br/>
+        <table>
+          <thead>
+            <tr>
+              <th>Блокировка</th>
+              <th>Заголовок</th>
+              <th>Статус</th>
+              <th>С какого числа</th>
+            </tr>
+          </thead>
+          <tbody>
+        EOS
+
+        val["watch"].each do |task|
+          buf["message"] += <<-EOS
+              <tr>
+                <td>#{task[0] ? 'есть' : 'нет'}</td>
+                <td><a href="#{task[2]}" target="_blank">#{task[1]}</a></td>
+                <td>#{task[3]}</td>
+                <td>#{task[4]}</td>
+              </tr>
+          EOS
+        end
+
+        buf["message"] += <<-EOS
+          </tbody>
+        </table>
+        <br/>
+        <br/>
+        EOS
+
+      end
+
       @mailing << buf
     end
 
@@ -66,6 +142,8 @@ class Mail < PulseDispatch
 
   def prepare_messages_bodies
     @mailing.map! do |mail|
+
+      mail["receiver"] = 'd.kazantsev@7pikes.com'
 
       message = {
         subject: @@subject,

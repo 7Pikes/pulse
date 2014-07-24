@@ -16,22 +16,36 @@ class Task < ActiveRecord::Base
   end
 
 
-  def to_pretty_s(target = :default)
+  def make_pretty(target = nil)
     buf = []
 
-    if target == :default
-      buf << (blocked ? '(Заблокирована) ' : '')
-    end
-    
-    buf << title
-    buf << ', '
-    buf << localized_phase
-    buf << ' c '
-    buf << localized_date
-    buf << ' - '
-    buf << '<a href="' + global_in_context_url + '">Открыть</a>'
+    case target
+    when :blocked
 
-    buf.join
+      buf << (blocked ? '(Заблокирована) ' : '')
+      buf << title
+      buf << ', '
+      buf << localized_phase
+      buf << ' c '
+      buf << localized_date
+      buf << ' - '
+      buf << '<a href="' + global_in_context_url + '">Открыть</a>'
+
+      buf =  buf.join
+
+    when :array
+
+      buf << blocked
+      buf << title
+      buf << global_in_context_url
+      buf << localized_phase
+      buf << localized_date
+
+    else
+      buf =  title
+    end
+
+    buf
   end
 
 
