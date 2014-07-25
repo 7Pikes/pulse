@@ -1,2 +1,6 @@
 config/database.yml
 config/credentials.yml
+
+.swp
+*.swp
+
