@@ -241,8 +241,8 @@ class Sync
   def store_blockers!
     @tasks.each do |task|
       begin
-        task["blockers"].each { |blocker| Blocker.create(blocker) }
-      rescue ActiveRecord::RecordNotUnique
+        task["blockers"].each { |blocker| Blocker.create(blocker.merge(task_id: task["id"])) }
+      rescue
       end
     end
   end

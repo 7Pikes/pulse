@@ -82,13 +82,13 @@ class Frontend < Sinatra::Base
   end
 
   get '/blocked_graph' do
-    @blocks = BlockedByDays.order("day DESC").limit(14).reverse.map do |b|
+    @blocks = BlockedByDays.order("day DESC").limit(21).reverse.map do |b|
       [b.day.strftime("%d/%m"), b.count]
     end
 
     @health = Delayed::Job.where("last_error is not null").count == 0
 
-    erb :blocked_graph, :layout => :layout
+    erb :blocked_graph, :layout => :layout_wide
   end
 
 
@@ -115,6 +115,17 @@ class Frontend < Sinatra::Base
     @health = Delayed::Job.where("last_error is not null").count == 0
     
     erb :plan, :layout => :layout_wide
+  end
+
+
+  get '/blockers' do
+    @blockers = Blocker.where(task_id: Task.all).map do |b|
+      ["#{b.message} (#{b.task.global_in_context_url})", b.age]
+    end
+
+    @health = Delayed::Job.where("last_error is not null").count == 0
+    
+    erb :blockers, :layout => :layout_wide
   end
 
 

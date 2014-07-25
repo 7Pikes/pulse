@@ -10,7 +10,7 @@
       <% end %>
     </a>
 
-    <a href="/blocked" class="button">Вернуться</a>
+    <a href="/default" class="button">Вернуться</a>
 
   </div>
 
@@ -26,7 +26,8 @@
 </div>
 
 
-<div class="seven column">
+
+<div class="seven columns">
 
   <script src="https://www.google.com/jsapi"></script>
 
@@ -36,22 +37,23 @@
 
    function drawChart() {
     var data = google.visualization.arrayToDataTable(
-      <%= [['Дата', 'Количество']] + @blocks %>
+      <%= [['Сообщение', 'Давность (дней)']] + @blockers %>
     );
 
     var options = {
-     title: 'Заблокированные задачи',
-     hAxis: {title: 'Дата'},
-     vAxis: {title: 'Кол-во'},
-     legend: 'none'
+     title: 'Блокеры задач',
+     hAxis: {title: 'Сообщение'},
+     vAxis: {title: 'Давность'},
+     legend: 'none',
+     allowHtml: true
     };
 
-    var chart = new google.visualization.ColumnChart(document.getElementById('blocks'));
+    var chart = new google.visualization.ColumnChart(document.getElementById('blockers'));
 
     chart.draw(data, options);
    }
   </script>
  
-  <div id="blocks" style="min-width: 1190px; height: 450px;"></div>
+  <div id="blockers" style="min-width: 1190px; height: 450px;"></div>
 
 </div>
