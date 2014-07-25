@@ -37,13 +37,13 @@
 
    function drawChart() {
     var data = google.visualization.arrayToDataTable(
-      <%= [['Сообщение', 'Давность (дней)']] + @blockers %>
+      <%= [['Сообщение', 'Давность']] + @blockers %>
     );
 
     var options = {
      title: 'Блокеры задач',
      hAxis: {title: 'Сообщение'},
-     vAxis: {title: 'Давность'},
+     vAxis: {title: 'Давность (дней)'},
      legend: 'none',
      allowHtml: true
     };

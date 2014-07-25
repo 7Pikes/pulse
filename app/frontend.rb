@@ -129,6 +129,17 @@ class Frontend < Sinatra::Base
   end
 
 
+  get '/lifecycle' do
+    @lifecycles = TaskLifecycle.all.map do |lc|
+      [lc.task.title, lc.age(:programming), lc.age(:reviewing), lc.age(:testing)]
+    end
+
+    @health = Delayed::Job.where("last_error is not null").count == 0
+    
+    erb :lifecycle, :layout => :layout_wide
+  end
+
+
   get '/status' do
     @jobs = Delayed::Job.select(:attempts, :run_at, :locked_at, :queue, :failed_at, :last_error)
 

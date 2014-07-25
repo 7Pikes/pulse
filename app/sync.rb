@@ -181,10 +181,7 @@ class Sync
     store_deadines!
     store_blocks!
 
-    Blocker.delete_all
-    store_blockers!
-
-    TaskLifecycle.delete_all
+    store_blockers!    
     store_tasks_lifecycle!
 
     true
@@ -265,6 +262,8 @@ class Sync
   end
 
   def store_blockers!
+    Blocker.delete_all
+
     @tasks.each do |task|
       begin
         task["blockers"].each { |blocker| Blocker.create(blocker.merge(task_id: task["id"])) }
@@ -274,6 +273,8 @@ class Sync
   end
 
   def store_tasks_lifecycle!
+    TaskLifecycle.delete_all
+
     @tasks.each do |task|
       begin
         next unless Phase.done_phases.include?(task["column_id"])
@@ -281,6 +282,8 @@ class Sync
         programming = task["movements"].find { |movement| movement["column_name"] == "Programming" }
         reviewing = task["movements"].find { |movement| movement["column_name"] == "Reviewing" }
         testing = task["movements"].find { |movement| movement["column_name"] == "Testing" }
+
+        next if !programming and !reviewing and !testing
 
         TaskLifecycle.create(
           task_id:      task["id"],

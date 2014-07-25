@@ -1,0 +1,60 @@
+<div class="seven columns">
+
+  <div id="buttons" style="float: right; margin-top: 50px">
+
+    <a href="/status" class="button" title="Демон отработал без ошибок?">Статус:
+      <% if @health %>
+        <span style="color: green">Норм.</span>
+      <% else %>
+        <span style="color: red">Ошиб.</span>
+      <% end %>
+    </a>
+
+    <a href="/default" class="button">Вернуться</a>
+
+  </div>
+
+  <h1 class="remove-bottom" style="margin-top: 40px">
+    <a href="/">Pulse</a>
+  </h1>
+
+  <h5>
+    Веб-мордочка для отображения текущих задач
+  </h5>
+  
+  <hr />
+</div>
+
+
+
+<div class="seven columns">
+
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  <script type="text/javascript">
+    google.load('visualization', '1', {packages: ['corechart']});
+  </script>
+
+  <script type="text/javascript">
+    function drawVisualization() {
+      var data = google.visualization.arrayToDataTable(
+        <%= [['Задача', 'Programming', 'Reviewing', 'Testing']] + @lifecycles %>
+      );
+
+      var options = {
+        title : 'Временные затраты на основных этапах',
+        vAxis: {title: "Продолжительность (дней)"},
+        hAxis: {title: "Задача"},
+        seriesType: "bars",
+        isStacked: true
+      };
+
+      var chart = new google.visualization.ComboChart(document.getElementById('lifecycles'));
+      chart.draw(data, options);
+    }
+    google.setOnLoadCallback(drawVisualization);
+  </script>
+
+  <div id="lifecycles" style="min-width: 1190px; height: 450px;"></div>
+
+</div>

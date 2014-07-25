@@ -1,17 +1,22 @@
 class TaskLifecycle < ActiveRecord::Base
 
-  belongs_to :task
-
   default_scope { order(:task_id) }
 
-  def age
+  def task
+    Task.unscoped.find_by_id(task_id)
+  end
+
+  def age(attribute)
     day_length = 60 * 60 * 24
 
-    {
-      programming: (programming / day_length).ceil,
-      reviewing: (reviewing / day_length).ceil,
-      testing: (testing / day_length).ceil
-    }
+    case attribute
+    when :programming
+      (programming.to_i / day_length).ceil
+    when :reviewing
+      (reviewing.to_i / day_length).ceil
+    when :testing
+      (testing.to_i / day_length).ceil
+    end
   end
 
 end
