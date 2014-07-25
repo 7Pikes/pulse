@@ -86,7 +86,7 @@ class Sync
     @tasks = JSON.parse(@tasks.body)
 
     @tasks.each do |task|
-      task["movement"] = fetch_task_movement(task["id"])
+      task["movements"] = fetch_task_movements(task["id"])
       task["blockers"] = fetch_task_blokers(task["id"], task["blocked"])
     end
 
@@ -94,7 +94,7 @@ class Sync
   end
 
 
-  def fetch_task_movement(task_id)
+  def fetch_task_movements(task_id)
     uri = "https://#{@@host}/api/#{@@api}/tasks/#{task_id}/events.json"
 
     events = http_request(uri)
@@ -116,11 +116,35 @@ class Sync
       end
     end
 
-    movement = TaskEvents.db.execute(
-      "select * from events where name = 'task_moved' order by created_at DESC limit 1"
-    ).flatten
+    movements = TaskEvents.db.execute(
+      "select * from events where name = 'task_moved' order by created_at"
+    )
 
-    movement.any? ? TaskEvents.with_column_names(movement) : {}
+    return [] unless movements.any?
+
+    movements.map! { |movement| TaskEvents.with_column_names(movement) }
+
+    movements.each_index do |ind|
+      next unless movements[ind + 1]
+
+      movements[ind]["age"] = (movements[ind + 1]["created_at"] - movements[ind]["created_at"])
+    end
+
+    story = {}
+
+    movements.each do |movement|
+      phase_name = movement["column_name"]
+
+      story[phase_name] ||= {}
+
+      # rewriting author if newer exists
+      story[phase_name]["user_name"] = movement["user_name"]
+
+      story[phase_name]["age"] ||= 0
+      story[phase_name]["age"] += movement["age"].to_i
+    end
+
+    story.keys.map { |key| story[key].merge("column_name" => key) }
   end
 
 
@@ -158,8 +182,10 @@ class Sync
     store_blocks!
 
     Blocker.delete_all
-
     store_blockers!
+
+    TaskLifecycle.delete_all
+    store_tasks_lifecycle!
 
     true
   end
@@ -247,16 +273,40 @@ class Sync
     end
   end
 
+  def store_tasks_lifecycle!
+    @tasks.each do |task|
+      begin
+        next unless Phase.done_phases.include?(task["column_id"])
+
+        programming = task["movements"].find { |movement| movement["column_name"] == "Programming" }
+        reviewing = task["movements"].find { |movement| movement["column_name"] == "Reviewing" }
+        testing = task["movements"].find { |movement| movement["column_name"] == "Testing" }
+
+        TaskLifecycle.create(
+          task_id:      task["id"],
+          programming:  (programming["age"] if programming),
+          reviewing:    (reviewing["age"] if reviewing),
+          testing:      (testing["age"] if testing)
+        )
+      rescue => e
+        puts e.class
+        puts e.message
+      end
+    end
+  end
+
 
   def handle_task_watcher(task)
-    return task unless task["movement"]
+    movement = task["movements"][-1]
 
-    phase_name = task["movement"]["column_name"]
+    return task unless movement    
+
+    phase_name = movement["column_name"]
 
     return task unless %w(Testing Reviewing).include?(phase_name)
     return task unless Phase.find_by_id(task["column_id"]).name == phase_name
 
-    user = User.find_by_name(task["movement"]["user_name"])
+    user = User.find_by_name(movement["user_name"])
     task["watcher_id"] = user.id
 
     task

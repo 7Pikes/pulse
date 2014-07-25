@@ -9,11 +9,12 @@ class Task < ActiveRecord::Base
 
   has_many :deadlines
   has_many :blockers
+  has_one  :task_lifecycle
 
   validates_presence_of :id, :title
 
   default_scope do
-    where("phase_id in (#{Phase.active_phases})").order("user_id, id")
+    where(phase_id: Phase.active_phases).order("user_id, id")
   end
 
 
