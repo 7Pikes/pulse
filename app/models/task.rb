@@ -23,7 +23,6 @@ class Task < ActiveRecord::Base
     case target
     when :blocked
 
-      buf << (blocked ? '(Заблокирована) ' : '')
       buf << title
       buf << ', '
       buf << localized_phase
