@@ -54,10 +54,11 @@ class Mail < PulseDispatch
       buf = {}
       buf["man"]      =  val["name"]
       buf["receiver"] =  val["email"]
+      buf["message"]  =  ''
 
       if val["work"]
 
-        buf["message"]  = <<-EOS
+        buf["message"]  += <<-EOS
         <p>Товарищ! Убедись, что у тебя нет заблокированных задач.</p>
         <strong>Задачи:</strong>
         <br/>
@@ -96,7 +97,7 @@ class Mail < PulseDispatch
 
       if val["watch"]
 
-        buf["message"]  = <<-EOS
+        buf["message"]  += <<-EOS
         <strong>Наблюдаемые задачи:</strong>
         <br/>
         <table>
