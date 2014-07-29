@@ -16,6 +16,8 @@ class TaskLifecycle < ActiveRecord::Base
       (reviewing.to_i / day_length).ceil
     when :testing
       (testing.to_i / day_length).ceil
+    when :blocked
+      (blocked.to_i / day_length).ceil
     end
   end
 

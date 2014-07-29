@@ -6,6 +6,7 @@ class CreateTaskLifecycles < ActiveRecord::Migration
       t.integer    :programming
       t.integer    :reviewing
       t.integer    :testing
+      t.integer    :blocked
     end
 
     execute "alter table task_lifecycles add unique key (task_id);"

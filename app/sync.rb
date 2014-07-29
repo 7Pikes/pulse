@@ -140,8 +140,16 @@ class Sync
       # rewriting author if newer exists
       story[phase_name]["user_name"] = movement["user_name"]
 
-      story[phase_name]["age"] ||= 0
-      story[phase_name]["age"] += movement["age"].to_i
+      story[phase_name]["raw_age"] ||= 0
+      story[phase_name]["raw_age"] += movement["age"].to_i
+
+      story[phase_name]["life_periods"] ||= []
+
+      life_period = [movement["created_at"], movement["created_at"] + movement["age"].to_i]
+
+      next if life_period[0] == life_period[1]
+
+      story[phase_name]["life_periods"] << life_period.map { |stamp| Time.at(stamp).to_s(:db) }
     end
 
     story.keys.map { |key| story[key].merge("column_name" => key) }
@@ -287,11 +295,47 @@ class Sync
 
         next if !programming and !reviewing and !testing
 
+        # Now we'll gonna reduce time at columns by time that task was blocked
+
+        blockers = Blocker.where(task_id: task["id"])
+
+        block_time_amount = 0
+      
+        [programming, reviewing, testing].each do |phase|
+          next unless phase
+
+          phase["age"] = phase["raw_age"]
+
+          blockers.each do |blocker|
+            phase["life_periods"].each do |life_period|
+
+              if blocker.created >= life_period[0] and blocker.created <= life_period[1]
+                # If task was blocked INSIDE of period at given column
+
+                block_time = [blocker.updated, life_period[1]].min - life_period[0]
+                phase["age"] -= block_time
+                block_time_amount += block_time
+
+              elsif blocker.created <= life_period[0] and blocker.updated >= life_period[0]
+                # If task was blocked BEFORE of period at given column
+
+                block_time = [blocker.updated, life_period[1]].min - [blocker.created, life_period[0]].max
+                phase["age"] -= block_time
+                block_time_amount += block_time
+
+              end
+
+            end
+          end
+
+        end
+
         TaskLifecycle.create(
           task_id:      task["id"],
           programming:  (programming["age"] if programming),
           reviewing:    (reviewing["age"] if reviewing),
-          testing:      (testing["age"] if testing)
+          testing:      (testing["age"] if testing),
+          blocked:       block_time_amount
         )
       rescue => e
         puts e.class

@@ -38,7 +38,7 @@
   <script type="text/javascript">
     function drawVisualization() {
       var data = google.visualization.arrayToDataTable(
-        <%= [['Задача', 'Programming', 'Reviewing', 'Testing']] + @lifecycles %>
+        <%= [['Задача', 'Programming', 'Reviewing', 'Testing', 'Blocked']] + @lifecycles %>
       );
 
       var options = {

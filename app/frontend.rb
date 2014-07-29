@@ -131,7 +131,13 @@ class Frontend < Sinatra::Base
 
   get '/lifecycle' do
     @lifecycles = TaskLifecycle.all.map do |lc|
-      ["#{lc.task.title} (#{lc.task.global_in_context_url})", lc.age(:programming), lc.age(:reviewing), lc.age(:testing)]
+      [
+        "#{lc.task.title} (#{lc.task.global_in_context_url})",
+        lc.age(:programming),
+        lc.age(:reviewing),
+        lc.age(:testing),
+        lc.age(:blocked)
+      ]
     end
 
     @health = Delayed::Job.where("last_error is not null").count == 0
