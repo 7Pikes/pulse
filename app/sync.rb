@@ -149,7 +149,7 @@ class Sync
 
       next if life_period[0] == life_period[1]
 
-      story[phase_name]["life_periods"] << life_period.map { |stamp| Time.at(stamp).to_s(:db) }
+      story[phase_name]["life_periods"] << life_period.map { |stamp| Time.at(stamp).to_time.utc }
     end
 
     story.keys.map { |key| story[key].merge("column_name" => key) }

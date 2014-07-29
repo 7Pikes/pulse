@@ -25,13 +25,4 @@ class Blocker < ActiveRecord::Base
     one if one.save    
   end
 
-
-  def age
-    period = Time.now - created
-
-    day_length = 60 * 60 * 24
-
-    (period / day_length).ceil
-  end
-
 end
