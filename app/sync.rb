@@ -262,14 +262,16 @@ class Sync
   end
 
   def store_blockers!
-    Blocker.delete_all
+    ids = []
 
     @tasks.each do |task|
       begin
-        task["blockers"].each { |blocker| Blocker.create(blocker.merge(task_id: task["id"])) }
+        task["blockers"].each { |blocker| ids << Blocker.anew(blocker.merge(task_id: task["id"])).id }
       rescue
       end
     end
+
+    Blocker.where("id not in (?)", ids).update_all(active: false)
   end
 
   def store_tasks_lifecycle!

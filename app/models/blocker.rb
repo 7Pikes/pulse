@@ -11,6 +11,21 @@ class Blocker < ActiveRecord::Base
   default_scope { order(:created) }
 
 
+  def self.anew(args)
+    one = where(
+      task_id: args[:task_id],
+      message: args[:message],
+      active: true
+    ).last
+
+    one ||= new(args)
+
+    one.active = true
+    one.updated = Time.now.beginning_of_day.to_s(:db)
+    one if one.save    
+  end
+
+
   def age
     period = Time.now - created
 
