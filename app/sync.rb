@@ -200,9 +200,7 @@ class Sync
     @users.each do |user|
       begin    
         User.create(id: user["id"], email: user["email"], name: user["name"])
-      rescue ActiveRecord::RecordNotUnique => e
-        puts e.class
-        puts e.message
+      rescue ActiveRecord::RecordNotUnique
       end
     end
   end
@@ -212,9 +210,7 @@ class Sync
     @phases.each do |phase|
       begin        
         Phase.create(id: phase["id"], name: phase["name"], position: phase["position"])
-      rescue ActiveRecord::RecordNotUnique => e
-        puts e.class
-        puts e.message
+      rescue ActiveRecord::RecordNotUnique
       end
     end
   end
@@ -237,9 +233,7 @@ class Sync
           ready_to_pull: task["ready_to_pull"],
           moved_at: task["moved_at"]
         )
-      rescue ActiveRecord::RecordNotUnique => e
-        puts e.class
-        puts e.message
+      rescue ActiveRecord::RecordNotUnique
       end
     end
   end
@@ -251,9 +245,7 @@ class Sync
 
       begin
         Deadline.create(task_id: task["id"], deadline: task["deadline"])
-      rescue ActiveRecord::RecordNotUnique => e
-        puts e.class
-        puts e.message
+      rescue ActiveRecord::RecordNotUnique
       end
     end
   end
