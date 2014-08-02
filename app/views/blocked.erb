@@ -45,6 +45,12 @@
           <br/>
           <br/>
 
+          <% task.blockers.active.each do |blocker| %>
+            <em title="Причина блокировки"> > <%= blocker.message %> </em> <br/>
+          <% end %>
+
+          <br/>
+
           <a href="<%= task.global_in_context_url %>" target="_blank">Открыть карточку</a>
 
           <% unless task.deadlines_list.empty? %>

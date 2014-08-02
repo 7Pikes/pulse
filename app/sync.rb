@@ -233,7 +233,7 @@ class Sync
           phase_id: task["column_id"],
           user_id: task["owner_id"],
           watcher_id: task["watcher_id"],
-          blocked: task["blocked"],
+          blocked: task["blockers"].any?,
           ready_to_pull: task["ready_to_pull"],
           moved_at: task["moved_at"]
         )

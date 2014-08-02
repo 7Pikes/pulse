@@ -10,6 +10,8 @@ class Blocker < ActiveRecord::Base
 
   default_scope { order(:created) }
 
+  scope :active, -> { where(active: true) }
+
 
   def self.anew(args)
     one = where(
@@ -23,6 +25,15 @@ class Blocker < ActiveRecord::Base
     one.active = true
     one.updated = Time.now.beginning_of_day.to_s(:db)
     one if one.save    
+  end
+
+
+  def age
+    period = Time.now - created
+
+    day_length = 60 * 60 * 24
+
+    (period / day_length).ceil
   end
 
 end
