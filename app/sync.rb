@@ -180,7 +180,7 @@ class Sync
   def update_storage
     User.delete_all if @users.any?
     Phase.delete_all if @phases.any?
-    Task.delete_all if @tasks.any?
+    Task.unscoped.delete_all if @tasks.any?
 
     store_users!
     store_phases!
